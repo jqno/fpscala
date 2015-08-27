@@ -54,4 +54,13 @@ class Chapter2Test extends FlatSpec with Matchers {
     val g = curry(f)(2)
     g(3) should be (f(2, 3))
   }
+  
+  
+  behavior of "2.4: uncurrying"
+  
+  it should "uncurry" in {
+    val f = (a: Int) => (b: Int) => a + b
+    val g = uncurry(f)
+    g(2, 3) should be (f(2)(3))
+  }
 }
