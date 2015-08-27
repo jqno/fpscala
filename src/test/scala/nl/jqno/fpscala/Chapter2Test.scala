@@ -45,4 +45,13 @@ class Chapter2Test extends FlatSpec with Matchers {
     val xs = Array(42, 1337, 1)
     isSorted(xs, (x: Int, y: Int) => x <= y) should be (false)
   }
+  
+  
+  behavior of "2.3: currying"
+  
+  it should "curry" in {
+    val f = (a: Int, b: Int) => a + b
+    val g = curry(f)(2)
+    g(3) should be (f(2, 3))
+  }
 }
