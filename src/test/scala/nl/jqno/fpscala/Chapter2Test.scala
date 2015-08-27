@@ -22,4 +22,27 @@ class Chapter2Test extends FlatSpec with Matchers {
     fib(6) should be (8)
     fib(8) should be (21)
   }
+  
+  
+  behavior of "2.2: isSorted"
+  
+  it should "say an empty or 1-element array is sorted" in {
+    isSorted(Array(), (_: Int, _: Int) => false) should be (true)
+    isSorted(Array("hello"), (_: String, _: String) => false) should be (true)
+  }
+  
+  it should "recognise a sorted array of ints" in {
+    val xs = Array(0, 1, 1, 2, 3, 5, 8, 13, 21)
+    isSorted(xs, (x: Int, y: Int) => x <= y) should be (true)
+  }
+  
+  it should "recognise an unsorted array of ints" in {
+    val xs = Array(1337, 1, 42)
+    isSorted(xs, (x: Int, y: Int) => x <= y) should be (false)
+  }
+  
+  it should "recognise an array that is sorted except for the last element" in {
+    val xs = Array(42, 1337, 1)
+    isSorted(xs, (x: Int, y: Int) => x <= y) should be (false)
+  }
 }

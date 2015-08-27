@@ -14,4 +14,17 @@ object Chapter2 extends App {
     if (n < 0) throw new IllegalArgumentException(s"$n < 0")
     else go(n, 0, 1)
   }
+  
+  
+  // 2.2: isSorted
+  def isSorted[A](as: Array[A], ordered: (A, A) => Boolean): Boolean = {
+    @tailrec
+    def go(i: Int, acc: Boolean): Boolean = {
+      if (i == as.length - 1) acc
+      else go(i + 1, acc && ordered(as(i), as(i + 1)))
+    }
+    
+    if (as.length <= 1) true
+    else go(0, true)
+  }
 }
