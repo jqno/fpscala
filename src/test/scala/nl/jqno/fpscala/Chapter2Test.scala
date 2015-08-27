@@ -63,4 +63,14 @@ class Chapter2Test extends FlatSpec with Matchers {
     val g = uncurry(f)
     g(2, 3) should be (f(2)(3))
   }
+  
+  
+  behavior of "2.5: compose"
+  
+  it should "compose" in {
+    val f: String => Boolean = _.length == 1
+    val g: Int => String = _.toString
+    compose(f, g)(1) should be (f(g(1)))
+    compose(f, g)(10) should be (f(g(10)))
+  }
 }
