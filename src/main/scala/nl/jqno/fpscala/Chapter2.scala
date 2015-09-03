@@ -19,13 +19,11 @@ object Chapter2 extends App {
   // 2.2: isSorted
   def isSorted[A](as: Array[A], ordered: (A, A) => Boolean): Boolean = {
     @tailrec
-    def go(i: Int, acc: Boolean): Boolean = {
-      if (i == as.length - 1) acc
-      else go(i + 1, acc && ordered(as(i), as(i + 1)))
-    }
+    def go(i: Int): Boolean =
+      if (i >= as.length - 1) true
+      else ordered(as(i), as(i + 1)) && go(i + 1)
     
-    if (as.length <= 1) true
-    else go(0, true)
+    go(0)
   }
   
   
