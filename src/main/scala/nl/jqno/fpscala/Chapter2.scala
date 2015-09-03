@@ -8,7 +8,7 @@ object Chapter2 extends App {
     @tailrec
     def go(n: Int, prev: Int, acc: Int): Int =
       if (n == 0) prev
-      else if (n == 1) acc
+      else if (n <= 1) acc
       else go(n - 1, acc, prev + acc)
     
     if (n < 0) throw new IllegalArgumentException(s"$n < 0")
@@ -22,9 +22,12 @@ object Chapter2 extends App {
     def go(i: Int): Boolean =
       if (i >= as.length - 1) true
       else ordered(as(i), as(i + 1)) && go(i + 1)
-    
+
     go(0)
   }
+
+//  def isSorted[A](as: Array[A], ordered: (A, A) => Boolean): Boolean =
+//    as.sliding(2) forall { case Array(x, y) => ordered(x, y) }
   
   
   // 2.3: currying
