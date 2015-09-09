@@ -125,4 +125,11 @@ class Chapter3Test extends FlatSpec with Matchers {
   it should "append two lists" in {
     append(someList, someList) should be (List(1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6))
   }
+
+
+  behavior of "flatten"
+
+  it should "flatten a list" in {
+    flatten(List(List(1, 2, 3), List(4), List(5, 6))) should be (someList)
+  }
 }

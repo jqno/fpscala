@@ -93,6 +93,10 @@ object Chapter3 {
 
   // 3.14: append
   def append[A](xs: List[A], ys: List[A]): List[A] = foldRight(xs, ys)(Cons(_, _))
+
+
+  // 3.15: flatten
+  def flatten[A](xss: List[List[A]]): List[A] = foldRight(xss, Nil: List[A])(append)
 }
 
 sealed trait List[+A]
