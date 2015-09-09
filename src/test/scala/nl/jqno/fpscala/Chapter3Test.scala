@@ -111,4 +111,11 @@ class Chapter3Test extends FlatSpec with Matchers {
   it should "length" in {
     lengthLeft(someList) should be (6)
   }
+
+
+  behavior of "reverse"
+
+  it should "reverse" in {
+    reverse(someList) should be (List(6, 5, 4, 3, 2, 1))
+  }
 }

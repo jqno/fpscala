@@ -85,6 +85,10 @@ object Chapter3 {
   def sumLeft(as: List[Int]): Int = foldLeft(as, 0)(_ + _)
   def productLeft(as: List[Int]): Int = foldLeft(as, 1)(_ * _)
   def lengthLeft(as: List[Int]): Int = foldLeft(as, 0)((acc, _) => acc + 1)
+
+
+  // 3.12: reverse
+  def reverse[A](as: List[A]): List[A] = foldLeft(as, Nil: List[A])((xs, x) => Cons(x, xs))
 }
 
 sealed trait List[+A]
