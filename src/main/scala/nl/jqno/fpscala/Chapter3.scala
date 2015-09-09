@@ -45,6 +45,20 @@ object Chapter3 {
     case Cons(head, Nil) => Nil
     case Cons(head, tail) => Cons(head, init(tail))
   }
+
+
+  // foldRight
+  def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B = as match {
+    case Nil => z
+    case Cons(x, xs) => f(x, foldRight(xs, z)(f))
+  }
+
+
+  // 3.7: short-circuit product
+  def product2(ns: List[Double]): Double =
+    foldRight(ns, 1.0)(_ * _)
+  // can't be short-circuited if 0.0 is encountered,
+  // because both parameters to f are fully evaluated before f itself is called.
 }
 
 sealed trait List[+A]
