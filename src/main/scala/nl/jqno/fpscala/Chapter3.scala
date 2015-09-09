@@ -9,6 +9,9 @@ object Chapter3 {
     //    case Cons(h, t) => h + sum(t)  // doesn't compile
     case _ => 101
   }
+
+  // 3.3: setHead
+  def setHead[A](h: A, l: List[A]): List[A] = Cons(h, l.tail)
 }
 
 sealed trait List[+A] {
