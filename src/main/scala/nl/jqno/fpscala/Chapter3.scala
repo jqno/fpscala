@@ -1,7 +1,6 @@
 package nl.jqno.fpscala
 
 import scala.annotation.tailrec
-import scala.collection.immutable.Stream.cons
 
 object Chapter3 {
   // 3.1: pattern match
@@ -72,6 +71,14 @@ object Chapter3 {
 
   // 3.9: length
   def length[A](as: List[A]): Int = foldRight(as, 0)((_, acc) => acc + 1)
+
+
+  // 3.10: foldLeft
+  @tailrec
+  def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B): B = as match {
+    case Nil => z
+    case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
+  }
 }
 
 sealed trait List[+A]
