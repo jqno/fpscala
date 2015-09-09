@@ -53,4 +53,18 @@ class Chapter3Test extends FlatSpec with Matchers {
     dropWhile(someList, (x: Int) => x < 4) should be (List(4, 5, 6))
     dropWhile(Nil, (x: Int) => x < 4) should be (Nil)
   }
+
+
+  behavior of "init"
+
+  it should "give all the elements from a list, except the last" in {
+    init(List(1)) should be (Nil)
+    init(someList) should be (List(1, 2, 3, 4, 5))
+  }
+
+  it should "throw when initing a Nil" in {
+    intercept[IllegalStateException] {
+      init(Nil)
+    }
+  }
 }

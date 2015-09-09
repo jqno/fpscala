@@ -1,6 +1,7 @@
 package nl.jqno.fpscala
 
 import scala.annotation.tailrec
+import scala.collection.immutable.Stream.cons
 
 object Chapter3 {
   // 3.1: pattern match
@@ -22,7 +23,7 @@ object Chapter3 {
   def setHead[A](h: A, as: List[A]): List[A] = Cons(h, tail(as))
 
 
-  // 3.4 drop
+  // 3.4: drop
   @tailrec
   def drop[A](as: List[A], n: Int): List[A] = n match {
     case 0 => as
@@ -30,11 +31,19 @@ object Chapter3 {
   }
 
 
-  // 3.5 dropWhile
+  // 3.5: dropWhile
   @tailrec
   def dropWhile[A](as: List[A], f: A => Boolean): List[A] = as match {
     case Cons(h, tail) if f(h) => dropWhile(tail, f)
     case xs => xs
+  }
+
+
+  // 3.6: init
+  def init[A](as: List[A]): List[A] = as match {
+    case Nil => throw new IllegalStateException("Can't init a Nil")
+    case Cons(head, Nil) => Nil
+    case Cons(head, tail) => Cons(head, init(tail))
   }
 }
 
