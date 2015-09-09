@@ -96,4 +96,19 @@ class Chapter3Test extends FlatSpec with Matchers {
   it should "reverse with foldLeft" in {
     foldLeft(someList, Nil: List[Int])((xs, x) => Cons(x, xs)) should be (List(6, 5, 4, 3, 2, 1))
   }
+
+
+  behavior of "sum, product and length via foldLeft"
+
+  it should "sum" in {
+    sumLeft(someList) should be (21)
+  }
+
+  it should "product" in {
+    productLeft(someList) should be (720)
+  }
+
+  it should "length" in {
+    lengthLeft(someList) should be (6)
+  }
 }

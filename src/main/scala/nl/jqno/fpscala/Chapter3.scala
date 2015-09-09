@@ -79,6 +79,12 @@ object Chapter3 {
     case Nil => z
     case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
   }
+
+
+  // 3.11: sum, product, left via foldLeft
+  def sumLeft(as: List[Int]): Int = foldLeft(as, 0)(_ + _)
+  def productLeft(as: List[Int]): Int = foldLeft(as, 1)(_ * _)
+  def lengthLeft(as: List[Int]): Int = foldLeft(as, 0)((acc, _) => acc + 1)
 }
 
 sealed trait List[+A]
