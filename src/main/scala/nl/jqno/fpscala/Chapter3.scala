@@ -68,6 +68,10 @@ object Chapter3 {
   // Cons(1, Cons(2, foldRight(List(3), Nil)(Cons(_, _))))
   // Cons(1, Cons(2, Cons(3, foldRight(Nil, Nil)(Cons(_, _)))))
   // Cons(1, Cons(2, Cons(3, Nil)))
+
+
+  // 3.9: length
+  def length[A](as: List[A]): Int = foldRight(as, 0)((_, acc) => acc + 1)
 }
 
 sealed trait List[+A]
