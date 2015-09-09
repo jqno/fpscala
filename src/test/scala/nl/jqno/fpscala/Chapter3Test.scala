@@ -45,4 +45,12 @@ class Chapter3Test extends FlatSpec with Matchers {
     drop(someList, 2) should be (List(3, 4, 5, 6))
     drop(someList, 0) should be (someList)
   }
+
+
+  behavior of "dropWhile"
+
+  it should "drop the elements while something is true" in {
+    dropWhile(someList, (x: Int) => x < 4) should be (List(4, 5, 6))
+    dropWhile(Nil, (x: Int) => x < 4) should be (Nil)
+  }
 }

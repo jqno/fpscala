@@ -28,6 +28,14 @@ object Chapter3 {
     case 0 => as
     case i => drop(tail(as), i - 1)
   }
+
+
+  // 3.5 dropWhile
+  @tailrec
+  def dropWhile[A](as: List[A], f: A => Boolean): List[A] = as match {
+    case Cons(h, tail) if f(h) => dropWhile(tail, f)
+    case xs => xs
+  }
 }
 
 sealed trait List[+A]
