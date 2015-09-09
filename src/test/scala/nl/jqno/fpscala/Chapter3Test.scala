@@ -120,6 +120,24 @@ class Chapter3Test extends FlatSpec with Matchers {
   }
 
 
+  behavior of "foldLeft via foldRight"
+
+  ignore should "have the same result" in {
+    foldLeft2(someList, 0)(_ + _) should be (foldLeft(someList, 0)(_ + _))
+    foldLeft2(someList, 1)(_ * _) should be (foldLeft(someList, 1)(_ * _))
+    foldLeft2(someList, Nil: List[Int])((xs, x) => Cons(x, xs)) should be (foldLeft(someList, Nil: List[Int])((xs, x) => Cons(x, xs)))
+  }
+
+
+  behavior of "foldRight via foldLeft"
+
+  ignore should "have the same result" in {
+    foldRight2(someList, 0)(_ + _) should be (foldRight(someList, 0)(_ + _))
+    foldRight2(someList, 1)(_ * _) should be (foldRight(someList, 1)(_ * _))
+    foldRight2(someList, Nil: List[Int])(Cons(_, _)) should be (foldRight(someList, Nil: List[Int])(Cons(_, _)))
+  }
+
+
   behavior of "append"
 
   it should "append two lists" in {

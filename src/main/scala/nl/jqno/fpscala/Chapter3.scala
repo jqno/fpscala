@@ -91,6 +91,11 @@ object Chapter3 {
   def reverse[A](as: List[A]): List[A] = foldLeft(as, Nil: List[A])((xs, x) => Cons(x, xs))
 
 
+  // 3.13: foldLeft via foldRight and vice versa
+  def foldLeft2[A, B](as: List[A], z: B)(f: (B, A) => B): B = ???
+  def foldRight2[A, B](as: List[A], z: B)(f: (A, B) => B): B = ???
+
+
   // 3.14: append
   def append[A](xs: List[A], ys: List[A]): List[A] = foldRight(xs, ys)(Cons(_, _))
 
