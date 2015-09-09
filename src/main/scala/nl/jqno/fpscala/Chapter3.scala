@@ -89,6 +89,10 @@ object Chapter3 {
 
   // 3.12: reverse
   def reverse[A](as: List[A]): List[A] = foldLeft(as, Nil: List[A])((xs, x) => Cons(x, xs))
+
+
+  // 3.14: append
+  def append[A](xs: List[A], ys: List[A]): List[A] = foldRight(xs, ys)(Cons(_, _))
 }
 
 sealed trait List[+A]

@@ -118,4 +118,11 @@ class Chapter3Test extends FlatSpec with Matchers {
   it should "reverse" in {
     reverse(someList) should be (List(6, 5, 4, 3, 2, 1))
   }
+
+
+  behavior of "append"
+
+  it should "append two lists" in {
+    append(someList, someList) should be (List(1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6))
+  }
 }
