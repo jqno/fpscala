@@ -13,13 +13,12 @@ object Chapter3 {
 
 sealed trait List[+A] {
   // 3.2: tail
-  def tail: List[A] = this match {
-    case Nil => throw new IllegalStateException("Can't tail a Nil")
-    case Cons(x, xs) => xs
-  }
+  def tail: List[A]
 }
-case object Nil extends List[Nothing]
-case class Cons[+A](_head: A, _tail: List[A]) extends List[A]
+case object Nil extends List[Nothing] {
+  override def tail = throw new IllegalStateException("Can't tail a Nil")
+}
+case class Cons[+A](head: A, tail: List[A]) extends List[A]
 
 object List {
   def sum(ints: List[Int]): Int = ints match {
