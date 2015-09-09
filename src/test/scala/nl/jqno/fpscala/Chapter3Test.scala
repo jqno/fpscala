@@ -67,4 +67,11 @@ class Chapter3Test extends FlatSpec with Matchers {
       init(Nil)
     }
   }
+
+
+  behavior of "foldRight identity"
+
+  it should "be the identity function" in {
+    ex3_8 should be (List(1, 2, 3))
+  }
 }

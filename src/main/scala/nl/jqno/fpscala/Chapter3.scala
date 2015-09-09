@@ -59,6 +59,15 @@ object Chapter3 {
     foldRight(ns, 1.0)(_ * _)
   // can't be short-circuited if 0.0 is encountered,
   // because both parameters to f are fully evaluated before f itself is called.
+
+
+  // 3.8: foldRight identity
+  val ex3_8 = foldRight(List(1, 2, 3), Nil: List[Int])(Cons(_, _))
+  // foldRight(List(1, 2, 3), Nil)(Cons(_, _))
+  // Cons(1, foldRight(List(2, 3), Nil)(Cons(_, _)))
+  // Cons(1, Cons(2, foldRight(List(3), Nil)(Cons(_, _))))
+  // Cons(1, Cons(2, Cons(3, foldRight(Nil, Nil)(Cons(_, _)))))
+  // Cons(1, Cons(2, Cons(3, Nil)))
 }
 
 sealed trait List[+A]
