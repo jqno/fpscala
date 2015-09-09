@@ -1,5 +1,7 @@
 package nl.jqno.fpscala
 
+import scala.annotation.tailrec
+
 object Chapter3 {
   // 3.1: pattern match
   val x = List(1, 2, 3, 4, 5) match {
@@ -18,6 +20,14 @@ object Chapter3 {
 
   // 3.3: setHead
   def setHead[A](h: A, as: List[A]): List[A] = Cons(h, tail(as))
+
+
+  // 3.4 drop
+  @tailrec
+  def drop[A](as: List[A], n: Int): List[A] = n match {
+    case 0 => as
+    case i => drop(tail(as), i - 1)
+  }
 }
 
 sealed trait List[+A]

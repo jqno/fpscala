@@ -37,4 +37,12 @@ class Chapter3Test extends FlatSpec with Matchers {
       setHead(0, Nil)
     }
   }
+
+
+  behavior of "drop"
+
+  it should "drop the first n elements from a list" in {
+    drop(someList, 2) should be (List(3, 4, 5, 6))
+    drop(someList, 0) should be (someList)
+  }
 }
