@@ -16,12 +16,12 @@ class Chapter3Test extends FlatSpec with Matchers {
   behavior of "tail"
 
   it should "take the tail of a list" in {
-    someList.tail should be (List(2, 3, 4, 5, 6))
+    tail(someList) should be (List(2, 3, 4, 5, 6))
   }
 
   it should "throw when tailing a Nil" in {
     intercept[IllegalStateException] {
-      Nil.tail
+      tail(Nil)
     }
   }
 

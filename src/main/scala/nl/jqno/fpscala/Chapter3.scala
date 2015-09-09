@@ -10,17 +10,18 @@ object Chapter3 {
     case _ => 101
   }
 
+  // 3.2: tail
+  def tail[A](as: List[A]): List[A] = as match {
+    case Nil => throw new IllegalStateException("Can't tail a Nil")
+    case Cons(_, t) => t
+  }
+
   // 3.3: setHead
-  def setHead[A](h: A, l: List[A]): List[A] = Cons(h, l.tail)
+  def setHead[A](h: A, as: List[A]): List[A] = Cons(h, tail(as))
 }
 
-sealed trait List[+A] {
-  // 3.2: tail
-  def tail: List[A]
-}
-case object Nil extends List[Nothing] {
-  override def tail = throw new IllegalStateException("Can't tail a Nil")
-}
+sealed trait List[+A]
+case object Nil extends List[Nothing]
 case class Cons[+A](head: A, tail: List[A]) extends List[A]
 
 object List {
