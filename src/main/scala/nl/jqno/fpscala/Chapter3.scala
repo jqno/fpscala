@@ -135,6 +135,18 @@ object Chapter3 {
     }
     go(Nil, as)
   }
+
+
+  // 3.19: filter
+  def filter[A](as: List[A])(f: A => Boolean): List[A] = {
+    @tailrec
+    def go(acc: List[A], xs: List[A]): List[A] = xs match {
+      case Nil => reverse(acc)
+      case Cons(h, t) if f(h) => go(Cons(h, acc), t)
+      case Cons(_, t) => go(acc, t)
+    }
+    go(Nil, as)
+  }
 }
 
 sealed trait List[+A]

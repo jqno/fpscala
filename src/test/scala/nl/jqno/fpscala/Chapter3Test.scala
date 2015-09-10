@@ -172,4 +172,11 @@ class Chapter3Test extends FlatSpec with Matchers {
     map(someList)(_ + 1) should be (List(2, 3, 4, 5, 6, 7))
     map(List(1.0, 4.2, 1.337))(_.toString) should be (List("1.0", "4.2", "1.337"))
   }
+
+
+  behavior of "filter"
+
+  it should "filter out all odd numbers" in {
+    filter(someList)(_ % 2 == 0) should be (List(2, 4, 6))
+  }
 }
