@@ -6,6 +6,16 @@ object Chapter3Tree {
     case Leaf(_) => 1
     case Branch(a, b) => 1 + treeSize(a) + treeSize(b)
   }
+
+
+  // 3.26: maximum
+  def maximum(tree: Tree[Int]): Int = {
+    def go(acc: Int, subtree: Tree[Int]): Int = subtree match {
+      case Leaf(x) => acc max x
+      case Branch(a, b) => acc max maximum(a) max maximum(b)
+    }
+    go(-1, tree)
+  }
 }
 
 sealed trait Tree[+A]
