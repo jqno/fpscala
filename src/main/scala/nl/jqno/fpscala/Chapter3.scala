@@ -185,6 +185,26 @@ object Chapter3 {
     }
     go(Nil, xs, ys)
   }
+
+
+  // 3.24: hasSubsequence
+  @tailrec
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
+    @tailrec
+    def hasContinuousSubsequence(innerSup: List[A], innerSub: List[A]): Boolean = innerSup match {
+      case Nil => innerSub == Nil
+      case Cons(suph, supt) => innerSub match {
+        case Nil => true
+        case Cons(subh, subt) if suph == subh => hasContinuousSubsequence(supt, subt)
+        case _ => false
+      }
+    }
+
+    sup match {
+      case Nil => sub == Nil
+      case Cons(_, supt) => hasContinuousSubsequence(sup, sub) || hasSubsequence(supt, sub)
+    }
+  }
 }
 
 sealed trait List[+A]

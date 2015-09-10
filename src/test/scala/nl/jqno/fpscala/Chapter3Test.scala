@@ -208,4 +208,25 @@ class Chapter3Test extends FlatSpec with Matchers {
     zipWith(List(1, 2, 3), List(4, 5, 6))(_ + _) should be (List(5, 7, 9))
     zipWith(List("abc", "def", "ghi"), List("e", "e", "e"))(_ contains _) should be (List(false, true, false))
   }
+
+
+  behavior of "hasSubsequence"
+
+  it should "find subsequences if they exist" in {
+    hasSubsequence(someList, List(1, 2)) should be (true)
+    hasSubsequence(someList, List(2, 3, 4)) should be (true)
+    hasSubsequence(someList, List(4)) should be (true)
+    hasSubsequence(someList, List(5, 6)) should be (true)
+    hasSubsequence(someList, someList) should be (true)
+  }
+
+  it should "not find subsequences if they don't exist" in {
+    hasSubsequence(someList, List(7)) should be (false)
+    hasSubsequence(someList, List(2, 4)) should be (false)
+  }
+
+  it should "handle edge cases" in {
+    hasSubsequence(Nil, List(1)) should be (false)
+    hasSubsequence(List(1), Nil) should be (true)
+  }
 }
