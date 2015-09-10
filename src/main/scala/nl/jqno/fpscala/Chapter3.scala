@@ -147,6 +147,17 @@ object Chapter3 {
     }
     go(Nil, as)
   }
+
+
+  // 3.20: flatMap
+  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = {
+    @tailrec
+    def go(acc: List[B], xs: List[A]): List[B] = xs match {
+      case Nil => reverse(acc)
+      case Cons(h, t) => go(append(f(h), acc), t)
+    }
+    go(Nil, as)
+  }
 }
 
 sealed trait List[+A]

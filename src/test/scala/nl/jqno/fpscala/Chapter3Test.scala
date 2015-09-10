@@ -179,4 +179,11 @@ class Chapter3Test extends FlatSpec with Matchers {
   it should "filter out all odd numbers" in {
     filter(someList)(_ % 2 == 0) should be (List(2, 4, 6))
   }
+
+
+  behavior of "flatMap"
+
+  it should "apply a function and flatten" in {
+    flatMap(someList)(i => List(i, i)) should be (List(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6))
+  }
 }
