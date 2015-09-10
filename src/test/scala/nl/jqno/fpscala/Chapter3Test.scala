@@ -150,4 +150,11 @@ class Chapter3Test extends FlatSpec with Matchers {
   it should "flatten a list" in {
     flatten(List(List(1, 2, 3), List(4), List(5, 6))) should be (someList)
   }
+
+
+  behavior of "addOne"
+
+  it should "add one to every element of a list" in {
+    addOne(someList) should be (List(2, 3, 4, 5, 6, 7))
+  }
 }

@@ -102,6 +102,13 @@ object Chapter3 {
 
   // 3.15: flatten
   def flatten[A](xss: List[List[A]]): List[A] = foldRight(xss, Nil: List[A])(append)
+
+
+  // 3.16: addOne
+  def addOne(as: List[Int]): List[Int] = as match {
+    case Nil => Nil
+    case Cons(x, xs) => Cons(x + 1, addOne(xs))
+  }
 }
 
 sealed trait List[+A]
