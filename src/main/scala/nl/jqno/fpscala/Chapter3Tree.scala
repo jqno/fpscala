@@ -26,6 +26,13 @@ object Chapter3Tree {
     }
     go(0, tree)
   }
+
+
+  // 3.28: map
+  def map[A, B](tree: Tree[A])(f: A => B): Tree[B] = tree match {
+    case Leaf(x) => Leaf(f(x))
+    case Branch(a, b) => Branch(map(a)(f), map(b)(f))
+  }
 }
 
 sealed trait Tree[+A]
