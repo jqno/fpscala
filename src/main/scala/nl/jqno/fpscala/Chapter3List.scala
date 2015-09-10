@@ -2,7 +2,7 @@ package nl.jqno.fpscala
 
 import scala.annotation.tailrec
 
-object Chapter3 {
+object Chapter3List {
   // 3.1: pattern match
   val x = List(1, 2, 3, 4, 5) match {
     case Cons(x, Cons(2, Cons(4, _))) => x

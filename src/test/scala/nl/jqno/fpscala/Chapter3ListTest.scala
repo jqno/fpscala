@@ -1,15 +1,15 @@
 package nl.jqno.fpscala
 
 import org.scalatest.{FlatSpec, Matchers}
-import Chapter3._
+import Chapter3List._
 
-class Chapter3Test extends FlatSpec with Matchers {
+class Chapter3ListTest extends FlatSpec with Matchers {
   val someList = List(1, 2, 3, 4, 5, 6)
 
   behavior of "pattern matching"
 
   it should "be 3" in {
-    Chapter3.x should be (3)
+    Chapter3List.x should be (3)
   }
 
 
@@ -79,7 +79,7 @@ class Chapter3Test extends FlatSpec with Matchers {
   behavior of "length"
 
   it should "give the correct length" in {
-    Chapter3.length(someList) should be (6)
+    Chapter3List.length(someList) should be (6)
   }
 
 
