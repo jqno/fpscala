@@ -193,4 +193,11 @@ class Chapter3Test extends FlatSpec with Matchers {
   it should "filter out all odd numbers" in {
     flatMapFilter(someList)(_ % 2 == 0) should be (List(2, 4, 6))
   }
+
+
+  behavior of "zipAdd"
+
+  it should "merge two lists and add the elements" in {
+    zipAdd(List(1, 2, 3), List(4, 5, 6)) should be (List(5, 7, 9))
+  }
 }

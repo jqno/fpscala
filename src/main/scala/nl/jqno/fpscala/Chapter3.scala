@@ -163,6 +163,17 @@ object Chapter3 {
   // 3.21: flatMapFilter
   def flatMapFilter[A](as: List[A])(f: A => Boolean): List[A] =
     flatMap(as)(a => if (f(a)) List(a) else Nil)
+
+
+  // 3.22: zipAdd
+  def zipAdd(xs: List[Int], ys: List[Int]): List[Int] = {
+    @tailrec
+    def go(acc: List[Int], xxs: List[Int], yys: List[Int]): List[Int] = (xxs, yys) match {
+      case (Nil, _) | (_, Nil) => reverse(acc)
+      case (Cons(xh, xt), Cons(yh, yt)) => go(Cons(xh + yh, acc), xt, yt)
+    }
+    go(Nil, xs, ys)
+  }
 }
 
 sealed trait List[+A]
