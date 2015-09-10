@@ -113,6 +113,17 @@ object Chapter3 {
     }
     go(Nil, as)
   }
+
+
+  // 3.17: doublesToStrings
+  def doublesToStrings(ds: List[Double]): List[String] = {
+    @tailrec
+    def go(acc: List[String], xs: List[Double]): List[String] = xs match {
+      case Nil => reverse(acc)
+      case Cons(h, t) => go(Cons(h.toString, acc), t)
+    }
+    go(Nil, ds)
+  }
 }
 
 sealed trait List[+A]

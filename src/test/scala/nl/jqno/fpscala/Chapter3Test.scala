@@ -157,4 +157,11 @@ class Chapter3Test extends FlatSpec with Matchers {
   it should "add one to every element of a list" in {
     addOne(someList) should be (List(2, 3, 4, 5, 6, 7))
   }
+
+
+  behavior of "doublesToStrings"
+
+  it should "convert a list of doubles to a list of strings" in {
+    doublesToStrings(List(1.0, 4.2, 1.337)) should be (List("1.0", "4.2", "1.337"))
+  }
 }
