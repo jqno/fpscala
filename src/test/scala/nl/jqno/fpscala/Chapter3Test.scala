@@ -164,4 +164,12 @@ class Chapter3Test extends FlatSpec with Matchers {
   it should "convert a list of doubles to a list of strings" in {
     doublesToStrings(List(1.0, 4.2, 1.337)) should be (List("1.0", "4.2", "1.337"))
   }
+
+
+  behavior of "map"
+
+  it should "do mappy things" in {
+    map(someList)(_ + 1) should be (List(2, 3, 4, 5, 6, 7))
+    map(List(1.0, 4.2, 1.337))(_.toString) should be (List("1.0", "4.2", "1.337"))
+  }
 }

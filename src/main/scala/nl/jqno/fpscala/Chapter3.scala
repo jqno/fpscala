@@ -124,6 +124,17 @@ object Chapter3 {
     }
     go(Nil, ds)
   }
+
+
+  // 3.18: map
+  def map[A, B](as: List[A])(f: A => B): List[B] = {
+    @tailrec
+    def go(acc: List[B], xs: List[A]): List[B] = xs match {
+      case Nil => reverse(acc)
+      case Cons(h, t) => go(Cons(f(h), acc), t)
+    }
+    go(Nil, as)
+  }
 }
 
 sealed trait List[+A]
