@@ -27,4 +27,11 @@ class Chapter3TreeTest extends FlatSpec with Matchers {
   it should "find the maximum value in the tree" in {
     maximum(someTree) should be (8)
   }
+
+
+  behavior of "depth"
+
+  it should "find the depth of a tree" in {
+    depth(someTree) should be (4)
+  }
 }

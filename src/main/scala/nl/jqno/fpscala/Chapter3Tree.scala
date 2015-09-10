@@ -16,6 +16,16 @@ object Chapter3Tree {
     }
     go(-1, tree)
   }
+
+
+  // 3.27: depth
+  def depth[A](tree: Tree[A]): Int = {
+    def go(acc: Int, subtree: Tree[A]): Int = subtree match {
+      case Leaf(_) => 1
+      case Branch(a, b) => 1 + (depth(a) max depth(b))
+    }
+    go(0, tree)
+  }
 }
 
 sealed trait Tree[+A]
