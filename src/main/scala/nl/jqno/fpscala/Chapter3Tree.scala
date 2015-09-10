@@ -27,6 +27,13 @@ object Chapter3Tree {
     case Leaf(x) => Leaf(f(x))
     case Branch(a, b) => Branch(map(a)(f), map(b)(f))
   }
+
+
+  // 3.29: fold
+  def fold[A, B](tree: Tree[A])(f: A => B)(g: (B, B) => B, h: B => B): B = tree match {
+    case Leaf(x) => f(x)
+    case Branch(a, b) => h(g(fold(a)(f)(g, h), fold(b)(f)(g, h)))
+  }
 }
 
 sealed trait Tree[+A]
