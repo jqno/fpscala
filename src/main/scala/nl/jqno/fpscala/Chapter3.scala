@@ -174,6 +174,17 @@ object Chapter3 {
     }
     go(Nil, xs, ys)
   }
+
+
+  // 3.23: zipWith
+  def zipWith[A, B](xs: List[A], ys: List[A])(f: (A, A) => B): List[B] = {
+    @tailrec
+    def go(acc: List[B], xxs: List[A], yys: List[A]): List[B] = (xxs, yys) match {
+      case (Nil, _) | (_, Nil) => reverse(acc)
+      case (Cons(xh, xt), Cons(yh, yt)) => go(Cons(f(xh, yh), acc), xt, yt)
+    }
+    go(Nil, xs, ys)
+  }
 }
 
 sealed trait List[+A]

@@ -200,4 +200,12 @@ class Chapter3Test extends FlatSpec with Matchers {
   it should "merge two lists and add the elements" in {
     zipAdd(List(1, 2, 3), List(4, 5, 6)) should be (List(5, 7, 9))
   }
+
+
+  behavior of "zipWith"
+
+  it should "merge two lists of any type and perform a function on the elements" in {
+    zipWith(List(1, 2, 3), List(4, 5, 6))(_ + _) should be (List(5, 7, 9))
+    zipWith(List("abc", "def", "ghi"), List("e", "e", "e"))(_ contains _) should be (List(false, true, false))
+  }
 }
