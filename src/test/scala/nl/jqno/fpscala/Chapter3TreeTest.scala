@@ -49,20 +49,20 @@ class Chapter3TreeTest extends FlatSpec with Matchers {
   behavior of "fold"
 
   it should "implement size" in {
-    fold(someTree)(_ => 1)(_ + _, 1 + _) should be (9)
+    fold(someTree)(_ => 1)(1 + _ + _) should be (9)
   }
 
   it should "implement maximum" in {
-    fold(someTree)(identity)(_ max _, identity) should be (8)
+    fold(someTree)(identity)(_ max _) should be (8)
   }
 
   it should "implement depth" in {
-    fold(someTree)(_ => 1)(_ max _, 1 + _) should be (4)
+    fold(someTree)(_ => 1)((a, b) => 1 + (a max b)) should be (4)
   }
 
   it should "also do mappy things" in {
     def myMap[A, B](tree: Tree[A])(f: A => B): Tree[B] =
-      fold(tree)(x => Leaf(f(x)): Tree[B])(Branch(_, _), identity)
+      fold(tree)(x => Leaf(f(x)): Tree[B])(Branch(_, _))
 
     myMap(someTree)(_ + 1) should be (plusOned)
     myMap(someTree)(_.toString) should be (toStringed)
