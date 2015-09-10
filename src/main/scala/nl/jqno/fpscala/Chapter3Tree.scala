@@ -19,12 +19,9 @@ object Chapter3Tree {
 
 
   // 3.27: depth
-  def depth[A](tree: Tree[A]): Int = {
-    def go(acc: Int, subtree: Tree[A]): Int = subtree match {
-      case Leaf(_) => 1
-      case Branch(a, b) => 1 + (depth(a) max depth(b))
-    }
-    go(0, tree)
+  def depth[A](tree: Tree[A]): Int = tree match {
+    case Leaf(_) => 1
+    case Branch(a, b) => 1 + (depth(a) max depth(b))
   }
 
 
