@@ -9,12 +9,9 @@ object Chapter3Tree {
 
 
   // 3.26: maximum
-  def maximum(tree: Tree[Int]): Int = {
-    def go(acc: Int, subtree: Tree[Int]): Int = subtree match {
-      case Leaf(x) => acc max x
-      case Branch(a, b) => acc max maximum(a) max maximum(b)
-    }
-    go(-1, tree)
+  def maximum(tree: Tree[Int]): Int = tree match {
+    case Leaf(x) => x
+    case Branch(a, b) => maximum(a) max maximum(b)
   }
 
 
