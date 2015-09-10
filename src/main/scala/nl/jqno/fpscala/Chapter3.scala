@@ -158,6 +158,11 @@ object Chapter3 {
     }
     go(Nil, as)
   }
+
+
+  // 3.21: flatMapFilter
+  def flatMapFilter[A](as: List[A])(f: A => Boolean): List[A] =
+    flatMap(as)(a => if (f(a)) List(a) else Nil)
 }
 
 sealed trait List[+A]
