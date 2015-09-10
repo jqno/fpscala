@@ -105,9 +105,13 @@ object Chapter3 {
 
 
   // 3.16: addOne
-  def addOne(as: List[Int]): List[Int] = as match {
-    case Nil => Nil
-    case Cons(x, xs) => Cons(x + 1, addOne(xs))
+  def addOne(as: List[Int]): List[Int] = {
+    @tailrec
+    def go(acc: List[Int], xs: List[Int]): List[Int] = xs match {
+      case Nil => reverse(acc)
+      case Cons(h, t) => go(Cons(h + 1, acc), t)
+    }
+    go(Nil, as)
   }
 }
 
