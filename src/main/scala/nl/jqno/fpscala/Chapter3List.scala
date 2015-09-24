@@ -169,8 +169,8 @@ object Chapter3List {
   def zipAdd(xs: List[Int], ys: List[Int]): List[Int] = {
     @tailrec
     def go(acc: List[Int], xxs: List[Int], yys: List[Int]): List[Int] = (xxs, yys) match {
-      case (Nil, _) | (_, Nil) => reverse(acc)
       case (Cons(xh, xt), Cons(yh, yt)) => go(Cons(xh + yh, acc), xt, yt)
+      case _ => reverse(acc)
     }
     go(Nil, xs, ys)
   }
@@ -180,8 +180,8 @@ object Chapter3List {
   def zipWith[A, B](xs: List[A], ys: List[A])(f: (A, A) => B): List[B] = {
     @tailrec
     def go(acc: List[B], xxs: List[A], yys: List[A]): List[B] = (xxs, yys) match {
-      case (Nil, _) | (_, Nil) => reverse(acc)
       case (Cons(xh, xt), Cons(yh, yt)) => go(Cons(f(xh, yh), acc), xt, yt)
+      case _ => reverse(acc)
     }
     go(Nil, xs, ys)
   }
