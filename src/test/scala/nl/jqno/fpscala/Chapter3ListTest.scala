@@ -225,6 +225,10 @@ class Chapter3ListTest extends FlatSpec with Matchers {
     hasSubsequence(someList, List(2, 4)) should be (false)
   }
 
+  it should "find the second occurrence if the first one fails" in {
+    hasSubsequence(List(1, 2, 3, 4, 5, 2, 7, 8, 9, 10), List(2, 7, 8)) should be (true)
+  }
+
   it should "handle edge cases" in {
     hasSubsequence(Nil, List(1)) should be (false)
     hasSubsequence(List(1), Nil) should be (true)
