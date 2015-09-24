@@ -205,6 +205,34 @@ object Chapter3List {
       case Cons(_, supt) => hasContinuousSubsequence(sup, sub) || hasSubsequence(supt, sub)
     }
   }
+
+  @tailrec
+  def hasSubsequenceMartijn[A](source: List[A], part: List[A]): Boolean = {
+    source match {
+      case Nil => part == Nil
+      case Cons(h,t) => part match {
+        case Nil => true
+        case Cons(ph, pt) =>
+          if(h==ph)
+            if(pt == Nil) true
+            else hasSubsequenceMartijn(t, pt)
+          else hasSubsequenceMartijn(t, part)
+      }
+    }
+  }
+
+  def hasSubsequenceMike[A](l: List[A], sl: List[A]): Boolean = {
+    foldLeft(l, (false, sl))( (acc, next) => {
+      val (works, rest) = acc
+      rest match {
+        case Nil => (works, Nil)
+        case Cons(x, xs) if x == next =>
+          (true, xs)
+        case Cons(x, xs) =>
+          (false, sl)
+      }
+    })._1
+  }
 }
 
 sealed trait List[+A]
