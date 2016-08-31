@@ -1,6 +1,7 @@
 package nl.jqno.fpscala
 
 import org.scalatest.{Matchers, FlatSpec}
+import nl.jqno.fpscala.Chapter4Option._
 
 class Chapter4OptionTest extends FlatSpec with Matchers {
   val some: Option[Int] = Some(1)
@@ -63,5 +64,29 @@ class Chapter4OptionTest extends FlatSpec with Matchers {
 
   it should "return None if the predicate is false" in {
     some.filter(even) should be (None)
+  }
+
+
+  behavior of "variance"
+
+  it should "calculate variance correctly" in {
+    // example taken from http://www.mathsisfun.com/data/standard-deviation.html
+    val values = Seq(600.0, 470.0, 170.0, 430.0, 300.0)
+
+    val m = mean(values)
+    val v = variance(values)
+
+    m match {
+      case Some(x) => x should be (394.0 +- 0.001)
+      case None => fail()
+    }
+    v match {
+      case Some(x) => x should be (21704.0 +- 0.001)
+      case None => fail()
+    }
+  }
+
+  it should "return None when calculating variance on an empty Seq" in {
+    variance(Seq()) should be (None)
   }
 }
