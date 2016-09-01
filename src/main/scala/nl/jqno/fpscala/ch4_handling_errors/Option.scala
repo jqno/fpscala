@@ -1,7 +1,5 @@
 package nl.jqno.fpscala.ch4_handling_errors
 
-import scala.annotation.tailrec
-
 sealed trait Option[+A] {
   def map[B](f: A => B): Option[B] = this match {
     case Some(value) => Some(f(value))
@@ -37,13 +35,9 @@ object OptionFunctions {
   def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
     a.flatMap(_a => b.map(_b => f(_a, _b)))
 
-  def sequence[A](as: List[Option[A]]): Option[List[A]] = {
-    @tailrec
-    def go(intermediate: List[A], bs: List[Option[A]]): Option[List[A]] = bs match {
-      case Nil => Some(intermediate.reverse)
-      case None :: _ => None
-      case Some(head) :: tail => go(head :: intermediate, tail)
-    }
-    go(Nil, as)
+  def sequence[A](as: List[Option[A]]): Option[List[A]] = as match {
+    case Nil => Some(Nil)
+    case None :: _ => None
+    case Some(head) :: tail => sequence(tail).map(head :: _)
   }
 }
