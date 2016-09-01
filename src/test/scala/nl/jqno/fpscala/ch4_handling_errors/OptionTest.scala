@@ -3,12 +3,16 @@ package nl.jqno.fpscala.ch4_handling_errors
 import OptionFunctions._
 import org.scalatest.{FlatSpec, Matchers}
 
+import scala.util.control.NonFatal
+
 class OptionTest extends FlatSpec with Matchers {
   val some: Option[Int] = Some(1)
   val some2: Option[Int] = Some(2)
   val none: Option[Int] = None
+
   val even = (i: Int) => i % 2 == 0
   val evenOpt = (i: Int) => if (even(i)) Some(i) else None
+  val parseInt = (s: String) => try { Some(s.toInt) } catch { case NonFatal(_) => None }
 
 
   behavior of "map"
@@ -112,5 +116,16 @@ class OptionTest extends FlatSpec with Matchers {
   it should "return None if any of its input values is also None" in {
     sequence(List(Some(1), None, Some(3))) should be (None)
     sequence(List(None, Some(2), Some(3))) should be (None)
+  }
+
+
+  behavior of "traverse"
+
+  it should "return a Some of a List of Ints if all Strings can be parsed" in {
+    traverse(List("1", "2", "3"))(parseInt) should be (Some(List(1, 2, 3)))
+  }
+
+  it should "return a None if one of the Strings can't be parsed" in {
+    traverse(List("1", "refridgerator", "3"))(parseInt) should be (None)
   }
 }
