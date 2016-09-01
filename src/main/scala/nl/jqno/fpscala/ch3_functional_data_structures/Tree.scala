@@ -1,6 +1,6 @@
-package nl.jqno.fpscala
+package nl.jqno.fpscala.ch3_functional_data_structures
 
-object Chapter3Tree {
+object TreeFunctions {
   // 3.25: size
   def treeSize[A](tree: Tree[A]): Int = tree match {
     case Leaf(_) => 1

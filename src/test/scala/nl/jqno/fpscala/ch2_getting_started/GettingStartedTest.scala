@@ -1,9 +1,9 @@
-package nl.jqno.fpscala
+package nl.jqno.fpscala.ch2_getting_started
 
+import GettingStarted._
 import org.scalatest.{FlatSpec, Matchers}
-import Chapter2._
 
-class Chapter2Test extends FlatSpec with Matchers {
+class GettingStartedTest extends FlatSpec with Matchers {
   behavior of "2.1: Fibonacci"
   
   it should "return the correct edge cases" in {

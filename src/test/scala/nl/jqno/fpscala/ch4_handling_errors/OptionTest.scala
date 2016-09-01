@@ -1,9 +1,9 @@
-package nl.jqno.fpscala
+package nl.jqno.fpscala.ch4_handling_errors
 
-import org.scalatest.{Matchers, FlatSpec}
-import nl.jqno.fpscala.Chapter4Option._
+import OptionFunctions._
+import org.scalatest.{FlatSpec, Matchers}
 
-class Chapter4OptionTest extends FlatSpec with Matchers {
+class OptionTest extends FlatSpec with Matchers {
   val some: Option[Int] = Some(1)
   val some2: Option[Int] = Some(2)
   val none: Option[Int] = None

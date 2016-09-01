@@ -1,9 +1,9 @@
-package nl.jqno.fpscala
+package nl.jqno.fpscala.ch3_functional_data_structures
 
+import TreeFunctions._
 import org.scalatest.{FlatSpec, Matchers}
-import Chapter3Tree._
 
-class Chapter3TreeTest extends FlatSpec with Matchers {
+class TreeTest extends FlatSpec with Matchers {
   val someTree = Branch(
                    Branch(
                      Leaf(5),

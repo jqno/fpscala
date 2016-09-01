@@ -1,4 +1,4 @@
-package nl.jqno.fpscala
+package nl.jqno.fpscala.ch4_handling_errors
 
 sealed trait Option[+A] {
   def map[B](f: A => B): Option[B] = this match {
@@ -23,7 +23,7 @@ sealed trait Option[+A] {
 case class Some[+A](get: A) extends Option[A]
 case object None extends Option[Nothing]
 
-object Chapter4Option {
+object OptionFunctions {
   def variance(xs: Seq[Double]): Option[Double] = mean(xs) flatMap { m =>
     mean(xs.map(x => math.pow(x - m, 2)))
   }

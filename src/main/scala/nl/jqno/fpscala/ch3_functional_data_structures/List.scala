@@ -1,8 +1,8 @@
-package nl.jqno.fpscala
+package nl.jqno.fpscala.ch3_functional_data_structures
 
 import scala.annotation.tailrec
 
-object Chapter3List {
+object ListFunctions {
   // 3.1: pattern match
   val x = List(1, 2, 3, 4, 5) match {
     case Cons(x, Cons(2, Cons(4, _))) => x

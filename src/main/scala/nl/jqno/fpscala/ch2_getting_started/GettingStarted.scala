@@ -1,8 +1,8 @@
-package nl.jqno.fpscala
+package nl.jqno.fpscala.ch2_getting_started
 
 import scala.annotation.tailrec
 
-object Chapter2 extends App {
+object GettingStarted extends App {
   // 2.1: Fibonacci
 //  def fib(n: Int): Int = {
 //    @tailrec
