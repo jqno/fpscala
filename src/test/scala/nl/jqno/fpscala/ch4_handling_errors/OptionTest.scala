@@ -128,4 +128,16 @@ class OptionTest extends FlatSpec with Matchers {
   it should "return a None if one of the Strings can't be parsed" in {
     traverse(List("1", "refridgerator", "3"))(parseInt) should be (None)
   }
+
+
+  behavior of "sequence2"
+
+  it should "return Some(List) when all input values are also Some" in {
+    sequence2(List(Some(1), Some(2), Some(3))) should be (Some(List(1, 2, 3)))
+  }
+
+  it should "return None if any of its input values is also None" in {
+    sequence2(List(Some(1), None, Some(3))) should be (None)
+    sequence2(List(None, Some(2), Some(3))) should be (None)
+  }
 }
