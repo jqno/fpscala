@@ -41,8 +41,6 @@ object OptionFunctions {
     case Some(head) :: tail => sequence(tail).map(head :: _)
   }
 
-  def traverse[A, B](as: List[A])(f: A => Option[B]): Option[List[B]] = as match {
-    case Nil => Some(Nil)
-    case head :: tail => f(head).flatMap(h => traverse(tail)(f).map(h :: _))
-  }
+  def traverse[A, B](as: List[A])(f: A => Option[B]): Option[List[B]] =
+    as.foldRight[Option[List[B]]](Some(Nil))((curr, acc) => f(curr).flatMap(h => acc.map(t => h :: t)))
 }
