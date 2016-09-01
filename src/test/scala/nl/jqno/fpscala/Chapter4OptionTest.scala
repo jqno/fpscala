@@ -89,4 +89,16 @@ class Chapter4OptionTest extends FlatSpec with Matchers {
   it should "return None when calculating variance on an empty Seq" in {
     variance(Seq()) should be (None)
   }
+
+
+  behavior of "map2"
+
+  it should "return a Some with the correct value when the inputs are both Some" in {
+    map2(some, some2)(_ + _) should be (Some(3))
+  }
+
+  it should "return None when either input is None" in {
+    map2(none, some)(_ + _) should be (None)
+    map2(some, none)(_ + _) should be (None)
+  }
 }
