@@ -101,4 +101,16 @@ class OptionTest extends FlatSpec with Matchers {
     map2(none, some)(_ + _) should be (None)
     map2(some, none)(_ + _) should be (None)
   }
+
+
+  behavior of "sequence"
+
+  it should "return Some(List) when all input values are also Some" in {
+    sequence(List(Some(1), Some(2), Some(3))) should be (Some(List(1, 2, 3)))
+  }
+
+  it should "return None if any of its input values is also None" in {
+    sequence(List(Some(1), None, Some(3))) should be (None)
+    sequence(List(None, Some(2), Some(3))) should be (None)
+  }
 }
