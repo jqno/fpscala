@@ -1,6 +1,9 @@
 package nl.jqno.fpscala.ch4_handling_errors
 
+import EitherFunctions._
 import org.scalatest.{FlatSpec, Matchers}
+
+import scala.util.control.NonFatal
 
 class EitherTest extends FlatSpec with Matchers {
   val right: Either[String, Int] = Right(1)
@@ -10,6 +13,7 @@ class EitherTest extends FlatSpec with Matchers {
 
   val even = (i: Int) => i % 2 == 0
   val evenOpt = (i: Int) => if (even(i)) Right(i) else oddLeft
+  val parseInt = (s: String) => try { Right(s.toInt) } catch { case NonFatal(_) => originalLeft }
 
   behavior of "map"
 
@@ -54,5 +58,28 @@ class EitherTest extends FlatSpec with Matchers {
   it should "return Left when either input is Left" in {
     originalLeft.map2(right)(_ + _) should be (originalLeft)
     right.map2(originalLeft)(_ + _) should be (originalLeft)
+  }
+
+
+  behavior of "sequence"
+
+  it should "return Right(List) when all input values are also Right" in {
+    sequence(List(Right(1), Right(2), Right(3))) should be (Right(List(1, 2, 3)))
+  }
+
+  it should "return None if any of its input values is also None" in {
+    sequence(List(Right(1), originalLeft, Right(3))) should be (originalLeft)
+    sequence(List(originalLeft, Right(2), Right(3))) should be (originalLeft)
+  }
+
+
+  behavior of "traverse"
+
+  it should "return a Some of a List of Ints if all Strings can be parsed" in {
+    traverse(List("1", "2", "3"))(parseInt) should be (Right(List(1, 2, 3)))
+  }
+
+  it should "return a None if one of the Strings can't be parsed" in {
+    traverse(List("1", "refridgerator", "3"))(parseInt) should be (originalLeft)
   }
 }
