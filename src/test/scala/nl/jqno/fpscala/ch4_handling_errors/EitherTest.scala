@@ -5,7 +5,7 @@ import org.scalatest.{FlatSpec, Matchers}
 class EitherTest extends FlatSpec with Matchers {
   val right: Either[String, Int] = Right(1)
   val right2: Either[String, Int] = Right(2)
-  val left: Either[String, Int] = Left("error")
+  val originalLeft: Either[String, Int] = Left("original left")
   val oddLeft = Left("odd")
 
   val even = (i: Int) => i % 2 == 0
@@ -18,7 +18,7 @@ class EitherTest extends FlatSpec with Matchers {
   }
 
   it should "map a Left" in {
-    left.map(_ + 1) should be (left)
+    originalLeft.map(_ + 1) should be (originalLeft)
   }
 
 
@@ -30,7 +30,7 @@ class EitherTest extends FlatSpec with Matchers {
   }
 
   it should "flatMap a Left" in {
-    left.flatMap(evenOpt) should be (oddLeft)
+    originalLeft.flatMap(evenOpt) should be (originalLeft)
   }
 
 
@@ -41,7 +41,7 @@ class EitherTest extends FlatSpec with Matchers {
   }
 
   it should "return the default value if it's a Left" in {
-    left.orElse(right2) should be (right2)
+    originalLeft.orElse(right2) should be (right2)
   }
 
 
@@ -52,7 +52,7 @@ class EitherTest extends FlatSpec with Matchers {
   }
 
   it should "return Left when either input is Left" in {
-    left.map2(right)(_ + _) should be (left)
-    right.map2(left)(_ + _) should be (left)
+    originalLeft.map2(right)(_ + _) should be (originalLeft)
+    right.map2(originalLeft)(_ + _) should be (originalLeft)
   }
 }
