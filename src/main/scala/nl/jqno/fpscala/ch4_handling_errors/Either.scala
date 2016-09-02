@@ -34,4 +34,11 @@ object EitherFunctions {
 
   def traverse[E, A, B](as: List[A])(f: A => Either[E, B]): Either[E, List[B]] =
     as.foldRight[Either[E, List[B]]](Right(Nil))((curr, acc) => f(curr).map2(acc)(_ :: _))
+
+
+  // 4.8: how to report multiple errors in map2?
+  // For map2, I think we should keep Either as is
+  // and change mkPerson to return Either[List[String], Person].
+  // traverse would need to change: we can't just call map2 on f(curr)
+  // anymore because that throws away all but one Left.
 }
