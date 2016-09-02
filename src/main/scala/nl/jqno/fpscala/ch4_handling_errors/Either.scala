@@ -1,6 +1,9 @@
 package nl.jqno.fpscala.ch4_handling_errors
 
 sealed trait Either[+E, +A] {
+
+  // 4.6: map, flatMap, orElse, map2
+
   def map[B](f: A => B): Either[E, B] =
     flatMap(a => Right(f(a)))
 
@@ -23,6 +26,9 @@ case class Left[+E](value: E) extends Either[E, Nothing]
 case class Right[+A](value: A) extends Either[Nothing, A]
 
 object EitherFunctions {
+
+  // 4.7: sequence and traverse
+
   def sequence[E, A](es: List[Either[E, A]]): Either[E, List[A]] =
     traverse(es)(identity)
 
