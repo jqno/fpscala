@@ -1,10 +1,25 @@
 package nl.jqno.fpscala.ch5_strictness_and_laziness
 
+import Stream._
+
 sealed trait Stream[+A] {
   // 5.1: toList
   def toList: List[A] = this match {
     case Empty => Nil
     case Cons(h, t) => h() :: t().toList
+  }
+
+  // 5.2: take and drop
+  def take(n: Int): Stream[A] = this match {
+    case _ if n == 0 => empty
+    case Empty => empty
+    case Cons(h, t) => cons(h(), t().take(n - 1))
+  }
+
+  def drop(n: Int): Stream[A] = this match {
+    case _ if n == 0 => this
+    case Empty => this
+    case Cons(h, t) => t().drop(n - 1)
   }
 }
 
