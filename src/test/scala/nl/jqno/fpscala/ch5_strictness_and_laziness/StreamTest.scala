@@ -111,4 +111,22 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
     stack should be (List(1, 2))
     actual should be (false)
   }
+
+
+  behavior of "takeWhile using foldRight"
+
+  it should "stop when empty" in {
+    Empty.takeWhile2(_ => true).toList should be (Nil)
+  }
+
+  it should "take elements until one doesn't satisfy the predicate" in {
+    Stream(2, 4, 6, 7, 8, 9, 10).takeWhile2(even).toList should be (List(2, 4, 6))
+  }
+
+  it should "be lazy" in {
+    val actual = stackingStream.takeWhile2(_ <= 2)
+    stack should be (List(1))
+    actual.toList should be (List(1, 2))
+    stack should be (List(1, 2, 3))
+  }
 }
