@@ -97,4 +97,18 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
     // plus one more, because it needs to evaluate the predicate on that.
     stack should be (List(1, 2, 3))
   }
+
+
+  behavior of "forAll"
+
+  it should "return correct results" in {
+    stream.forAll(even) should be (false)
+    stream.forAll(_ < 6) should be (true)
+  }
+
+  it should "short-circuit" in {
+    val actual = stackingStream.forAll(_ < 2)
+    stack should be (List(1, 2))
+    actual should be (false)
+  }
 }
