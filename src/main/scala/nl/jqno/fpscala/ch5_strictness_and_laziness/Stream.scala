@@ -1,6 +1,13 @@
 package nl.jqno.fpscala.ch5_strictness_and_laziness
 
-sealed trait Stream[+A]
+sealed trait Stream[+A] {
+  // 5.1: toList
+  def toList: List[A] = this match {
+    case Empty => Nil
+    case Cons(h, t) => h() :: t().toList
+  }
+}
+
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
 
