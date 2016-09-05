@@ -16,6 +16,9 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
     cons({ stack += 4; 4 },
     Empty))))
 
+  val even = (i: Int) => i % 2 == 0
+
+
   behavior of "stack"
 
   it should "initially be empty" in {
@@ -69,5 +72,29 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
   it should "be lazy" in {
     stackingStream.drop(2)
     stack.isEmpty should be (true)
+  }
+
+
+  behavior of "takeWhile"
+
+  it should "stop when empty" in {
+    Empty.takeWhile(_ => true).toList should be (Nil)
+  }
+
+  it should "take elements until one doesn't satisfy the predicate" in {
+    Stream(2, 4, 6, 7, 8, 9, 10).takeWhile(even).toList should be (List(2, 4, 6))
+  }
+
+  it should "be lazy" in {
+    val actual = stackingStream.takeWhile(_ <= 2)
+
+    // It evaluates the predicate for the first element, then stops because it's lazy.
+    stack should be (List(1))
+
+    actual.toList should be (List(1, 2))
+
+    // After realizing the actual stream, it has evaluated its elements
+    // plus one more, because it needs to evaluate the predicate on that.
+    stack should be (List(1, 2, 3))
   }
 }
