@@ -109,8 +109,15 @@ object Stream {
 
 
   // 5.12: fibs, from, constant, and ones in terms of unfold
-  def fibs2: Stream[Int] = ???
-  def from2(n: Int): Stream[Int] = ???
-  def constant2[A](a: A): Stream[A] = ???
-  def ones2: Stream[Int] = ???
+  def fibs2: Stream[Int] =
+    unfold((0, 1)) { case (a, b) => Some((a, (b, a + b))) }
+
+  def from2(n: Int): Stream[Int] =
+    unfold(n) { n => Some((n, n + 1)) }
+
+  def constant2[A](a: A): Stream[A] =
+    unfold(a) { (a: A) => Some((a, a)) }
+
+  def ones2: Stream[Int] =
+    unfold(()) { _ => Some((1, ())) }
 }
