@@ -65,6 +65,14 @@ sealed trait Stream[+A] {
 
   def flatMap[B](f: A => Stream[B]): Stream[B] =
     foldRight[Stream[B]](empty)((h, t) => f(h).append(t))
+
+
+  // 5.13: map, take, takeWhile, zipWith, and zipAll in terms of unfold
+  def map2[B](f: A => B): Stream[B] = ???
+  def take2(n: Int): Stream[A] = ???
+  def takeWhile3(p: A => Boolean): Stream[A] = ???
+  def zipWith[B, C](s2: Stream[B])(f: (A, B) => C): Stream[C] = ???
+  def zipAll[B](s2: Stream[B]): Stream[(Option[A], Option[B])] = ???
 }
 
 case object Empty extends Stream[Nothing]
