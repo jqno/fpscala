@@ -178,7 +178,8 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
 
   it should "be lazy" in {
     val actual = stackingStream.filter(even)
-    stack should be (List(1, 2)) // why?
+    stack should be (List(1, 2)) // why? <-- because it continues until it encounters a value that satisfied the predicate
+                                 //          in other words, until it finds the first value of the filtered stream.
     actual.toList
     stack should be (fullStack)
   }
@@ -187,22 +188,22 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
   behavior of "append"
 
   it should "append an element to the end of an empty Stream" in {
-    Empty.append(1).toList should be (List(1))
+    Empty.append(Stream(42)).toList should be (List(42))
   }
 
   it should "append an element to the end of a non-empty Stream" in {
-    stream.append(42).toList should be (fullStack :+ 42)
+    stream.append(Stream(42)).toList should be (fullStack :+ 42)
   }
 
   it should "be lazy in its parameter" in {
-    val actual = stream.append({ stack += 42; 42 }) // note: not the stackingStream
+    val actual = stream.append(Stream({ stack += 42; 42 })) // note: not the stackingStream
     stack.isEmpty should be (true)
     actual.toList
     stack should be (List(42))
   }
 
   it should "be lazy in its evaluation" in {
-    val actual = stackingStream.append(42)
+    val actual = stackingStream.append(Stream(42))
     stack should be (List(1))
     actual.toList
     stack should be (fullStack)
