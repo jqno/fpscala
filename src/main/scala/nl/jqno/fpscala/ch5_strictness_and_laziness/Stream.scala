@@ -106,4 +106,11 @@ object Stream {
     case Some((a, s)) => cons(a, unfold(s)(f))
     case None => empty
   }
+
+
+  // 5.12: fibs, from, constant, and ones in terms of unfold
+  def fibs2: Stream[Int] = ???
+  def from2(n: Int): Stream[Int] = ???
+  def constant2[A](a: A): Stream[A] = ???
+  def ones2: Stream[Int] = ???
 }
