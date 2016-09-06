@@ -129,4 +129,20 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
     actual.toList should be (List(1, 2))
     stack should be (List(1, 2, 3))
   }
+
+
+  behavior of "headOption"
+
+  it should "return None on an empty Stream" in {
+    Empty.headOption should be (None)
+  }
+
+  it should "return the head in a Some on a non-empty Stream" in {
+    stream.headOption should be (Some(1))
+  }
+
+  it should "be lazy" in {
+    stackingStream.headOption
+    stack should be (List(1))
+  }
 }
