@@ -266,4 +266,11 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
   it should "be lazy" in {
     // I don't know how to test this
   }
+
+
+  behavior of "unfold"
+
+  it should "be tested in the subsequent tests" in {
+    // see the tests for fibs2, from2, contant2 and ones2
+  }
 }
