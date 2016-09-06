@@ -7,23 +7,24 @@ import scala.collection.mutable
 
 class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
   val stream = Stream(1, 2, 3, 4)
+  val even = (i: Int) => i % 2 == 0
 
   val stack = mutable.MutableList.empty[Int]
-  val fullStack = List(1, 2, 3, 4)
   def stackingStream: Stream[Int] =
-    cons({ stack += 1; 1 },
-    cons({ stack += 2; 2 },
-    cons({ stack += 3; 3 },
-    cons({ stack += 4; 4 },
+    cons(addToStack(1),
+    cons(addToStack(2),
+    cons(addToStack(3),
+    cons(addToStack(4),
     Empty))))
-
-  val even = (i: Int) => i % 2 == 0
+  val addToStack = (i: Int) => { stack += i; i }
+  val fullStack = List(1, 2, 3, 4)
+  val emptyStack = Nil
 
 
   behavior of "stack"
 
   it should "initially be empty" in {
-    stack.isEmpty should be (true)
+    stack should be (emptyStack)
   }
 
   it should "not be empty when we realize items of the stackingStream" in {
@@ -53,7 +54,7 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
 
   it should "be lazy" in {
     val actual = stackingStream.take(2)
-    stack.isEmpty should be (true)
+    stack should be (emptyStack)
     actual.toList should be (List(1, 2))
     stack should be (List(1, 2))
   }
@@ -72,7 +73,7 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
 
   it should "be lazy" in {
     stackingStream.drop(2)
-    stack.isEmpty should be (true)
+    stack should be (emptyStack)
   }
 
 
@@ -196,8 +197,8 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
   }
 
   it should "be lazy in its parameter" in {
-    val actual = stream.append(Stream({ stack += 42; 42 })) // note: not the stackingStream
-    stack.isEmpty should be (true)
+    val actual = stream.append(Stream(addToStack(42))) // note: not the stackingStream
+    stack should be (emptyStack)
     actual.toList
     stack should be (List(42))
   }
@@ -235,7 +236,7 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
   }
 
   it should "be lazy" in {
-    val actual = Stream.constant({ stack += 42; 42 }).take(3)
+    val actual = Stream.constant(addToStack(42)).take(3)
     stack should be (Nil)
     actual.toList
     stack should be (List(42, 42, 42))
