@@ -54,11 +54,14 @@ sealed trait Stream[+A] {
 
 
   // 5.7: map, filter, append, flatMap
-  def map[B](f: A => B): Stream[B] = ???
+  def map[B](f: A => B): Stream[B] =
+    foldRight[Stream[B]](empty)((h, t) => cons(f(h), t))
 
-  def filter(f: A => Boolean): Stream[A] = ???
+  def filter(f: A => Boolean): Stream[A] =
+    foldRight[Stream[A]](empty)((h, t) => if (f(h)) cons(h, t) else t)
 
-  def append[AA >: A](a: => AA): Stream[AA] = ???
+  def append[AA >: A](a: => AA): Stream[AA] =
+    foldRight[Stream[AA]](Stream(a))((h, t) => cons(h, t))
 
   def flatMap[B](f: A => Stream[B]): Stream[B] = ???
 }

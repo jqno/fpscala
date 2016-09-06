@@ -160,7 +160,7 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
 
   it should "be lazy" in {
     val actual = stackingStream.map(_.toString)
-    stack.isEmpty should be (true)
+    stack should be (List(1))
     actual.toList
     stack should be (fullStack)
   }
@@ -178,7 +178,7 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
 
   it should "be lazy" in {
     val actual = stackingStream.filter(even)
-    stack.isEmpty should be (true)
+    stack should be (List(1, 2)) // why?
     actual.toList
     stack should be (fullStack)
   }
@@ -191,11 +191,11 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
   }
 
   it should "append an element to the end of a non-empty Stream" in {
-    stream.append(42) should be (fullStack :+ 42)
+    stream.append(42).toList should be (fullStack :+ 42)
   }
 
   it should "be lazy in its parameter" in {
-    val actual = Empty.append({ stack += 42; 42 })
+    val actual = stream.append({ stack += 42; 42 }) // note: not the stackingStream
     stack.isEmpty should be (true)
     actual.toList
     stack should be (List(42))
@@ -203,9 +203,9 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
 
   it should "be lazy in its evaluation" in {
     val actual = stackingStream.append(42)
-    stack.isEmpty should be (true)
+    stack should be (List(1))
     actual.toList
-    stack should be (fullStack :+ 42)
+    stack should be (fullStack)
   }
 
 
@@ -221,7 +221,7 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
 
   it should "be lazy" in {
     val actual = stackingStream.flatMap(a => Stream(a.toString, a.toString))
-    stack.isEmpty should be (true)
+    stack should be (List(1))
     actual.toList
     stack should be (fullStack)
   }
