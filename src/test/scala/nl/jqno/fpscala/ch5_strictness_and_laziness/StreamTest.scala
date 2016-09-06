@@ -9,6 +9,7 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
   val stream = Stream(1, 2, 3, 4)
 
   val stack = mutable.MutableList.empty[Int]
+  val fullStack = List(1, 2, 3, 4)
   def stackingStream: Stream[Int] =
     cons({ stack += 1; 1 },
     cons({ stack += 2; 2 },
@@ -27,7 +28,7 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
 
   it should "not be empty when we realize items of the stackingStream" in {
     stackingStream.toList
-    stack should be (List(1, 2, 3, 4))
+    stack should be (fullStack)
   }
 
 
@@ -36,7 +37,7 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
   it should "convert a Stream into a List with the same values" in {
     val actual = stream.toList
     classOf[List[_]].isAssignableFrom(actual.getClass) should be (true)
-    actual should be (List(1, 2, 3, 4))
+    actual should be (fullStack)
   }
 
   behavior of "take"
@@ -144,5 +145,84 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
   it should "be lazy" in {
     stackingStream.headOption
     stack should be (List(1))
+  }
+
+
+  behavior of "map"
+
+  it should "return empty when the Stream is empty" in {
+    Empty.map(identity).toList should be (Nil)
+  }
+
+  it should "map over all the values" in {
+    stream.map(_.toString).toList should be (List("1", "2", "3", "4"))
+  }
+
+  it should "be lazy" in {
+    val actual = stackingStream.map(_.toString)
+    stack.isEmpty should be (true)
+    actual.toList
+    stack should be (fullStack)
+  }
+
+
+  behavior of "filter"
+
+  it should "return empty when the Stream is empty" in {
+    Empty.filter(_ => true).toList should be (Nil)
+  }
+
+  it should "filter out all elements where the predicate is false" in {
+    stream.filter(even).toList should be (List(2, 4))
+  }
+
+  it should "be lazy" in {
+    val actual = stackingStream.filter(even)
+    stack.isEmpty should be (true)
+    actual.toList
+    stack should be (fullStack)
+  }
+
+
+  behavior of "append"
+
+  it should "append an element to the end of an empty Stream" in {
+    Empty.append(1).toList should be (List(1))
+  }
+
+  it should "append an element to the end of a non-empty Stream" in {
+    stream.append(42) should be (fullStack :+ 42)
+  }
+
+  it should "be lazy in its parameter" in {
+    val actual = Empty.append({ stack += 42; 42 })
+    stack.isEmpty should be (true)
+    actual.toList
+    stack should be (List(42))
+  }
+
+  it should "be lazy in its evaluation" in {
+    val actual = stackingStream.append(42)
+    stack.isEmpty should be (true)
+    actual.toList
+    stack should be (fullStack :+ 42)
+  }
+
+
+  behavior of "flatMap"
+
+  it should "return empty when the Stream is empty" in {
+    Empty.flatMap(a => Stream(a)).toList should be (Nil)
+  }
+
+  it should "flatMap over all the values" in {
+    stream.flatMap(a => Stream(a.toString, a.toString)).toList should be (List("1", "1", "2", "2", "3", "3", "4", "4"))
+  }
+
+  it should "be lazy" in {
+    val actual = stackingStream.flatMap(a => Stream(a.toString, a.toString))
+    stack.isEmpty should be (true)
+    actual.toList
+    stack should be (fullStack)
   }
 }
