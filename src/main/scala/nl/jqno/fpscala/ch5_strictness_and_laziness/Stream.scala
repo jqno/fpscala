@@ -2,6 +2,8 @@ package nl.jqno.fpscala.ch5_strictness_and_laziness
 
 import Stream._
 
+import scala.annotation.tailrec
+
 sealed trait Stream[+A] {
   // 5.1: toList
   def toList: List[A] = this match {
@@ -89,4 +91,12 @@ object Stream {
 
   // 5.9: from
   def from(n: => Int): Stream[Int] = cons(n, from(n + 1))
+
+
+  // 5.10: fibonacci
+  def fibs: Stream[Int] = {
+    def go(a: Int, b: Int): Stream[Int] = cons(a, go(b, a + b))
+
+    go(0, 1)
+  }
 }

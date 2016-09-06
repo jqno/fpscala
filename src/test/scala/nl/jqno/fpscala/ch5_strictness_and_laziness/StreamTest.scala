@@ -255,4 +255,15 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
     actual.toList
     stack should be (List(3, 3, 3))
   }
+
+
+  behavior of "fibs"
+
+  it should "return a Stream of fibonacci numbers" in {
+    Stream.fibs.take(9).toList should be (List(0, 1, 1, 2, 3, 5, 8, 13, 21))
+  }
+
+  it should "be lazy" in {
+    // I don't know how to test this
+  }
 }
