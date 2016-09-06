@@ -2,8 +2,6 @@ package nl.jqno.fpscala.ch5_strictness_and_laziness
 
 import Stream._
 
-import scala.annotation.tailrec
-
 sealed trait Stream[+A] {
   // 5.1: toList
   def toList: List[A] = this match {
@@ -116,7 +114,7 @@ object Stream {
     unfold(n) { n => Some((n, n + 1)) }
 
   def constant2[A](a: A): Stream[A] =
-    unfold(a) { (a: A) => Some((a, a)) }
+    unfold(()) { _ => Some((a, ())) }
 
   def ones2: Stream[Int] =
     unfold(()) { _ => Some((1, ())) }

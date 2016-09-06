@@ -275,28 +275,28 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
   }
 
 
-  behavior of "fibs2"
+  behavior of "fibs in terms of unfold"
 
   it should "return a Stream of fibonacci numbers" in {
     Stream.fibs2.take(9).toList should be (List(0, 1, 1, 2, 3, 5, 8, 13, 21))
   }
 
 
-  behavior of "from2"
+  behavior of "from in terms of unfold"
 
   it should "return a Stream of increasing integers" in {
     Stream.from2(3).take(3).toList should be (List(3, 4, 5))
   }
 
 
-  behavior of "constant2"
+  behavior of "constant in terms of unfold"
 
   it should "return a Stream of constants" in {
     Stream.constant2(42).take(3).toList should be (List(42, 42, 42))
   }
 
 
-  behavior of "ones2"
+  behavior of "ones in terms of unfold"
 
   it should "return a Stream of 1s" in {
     Stream.ones2.take(3).toList should be (List(1, 1, 1))
