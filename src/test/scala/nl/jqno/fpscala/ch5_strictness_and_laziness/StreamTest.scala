@@ -226,4 +226,18 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
     actual.toList
     stack should be (fullStack)
   }
+
+
+  behavior of "constant"
+
+  it should "return a Stream of constants" in {
+    Stream.constant(42).take(3).toList should be (List(42, 42, 42))
+  }
+
+  it should "be lazy" in {
+    val actual = Stream.constant({ stack += 42; 42 }).take(3)
+    stack should be (Nil)
+    actual.toList
+    stack should be (List(42, 42, 42))
+  }
 }
