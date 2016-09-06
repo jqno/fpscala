@@ -237,8 +237,22 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
 
   it should "be lazy" in {
     val actual = Stream.constant(addToStack(42)).take(3)
-    stack should be (Nil)
+    stack should be (emptyStack)
     actual.toList
     stack should be (List(42, 42, 42))
+  }
+
+
+  behavior of "from"
+
+  it should "return a Stream of increasing integers" in {
+    Stream.from(3).take(3).toList should be (List(3, 4, 5))
+  }
+
+  it should "be lazy" in {
+    val actual = Stream.from(addToStack(3)).take(3)
+    stack should be (emptyStack)
+    actual.toList
+    stack should be (List(3, 3, 3))
   }
 }

@@ -85,4 +85,8 @@ object Stream {
 
   // 5.8: constant
   def constant[A](a: => A): Stream[A] = cons(a, constant(a))
+
+
+  // 5.9: from
+  def from(n: => Int): Stream[Int] = cons(n, from(n + 1))
 }
