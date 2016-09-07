@@ -110,6 +110,16 @@ sealed trait Stream[+A] {
       case Some(Empty) => Some((Empty, None))
       case Some(Cons(h, t)) => Some((cons(h(), t()), Some(t())))
     }
+
+
+  // taken from the book
+  def exists(p: A => Boolean): Boolean = this match {
+    case Cons(h, t) => p(h()) || t().exists(p)
+    case _ => false
+  }
+
+  def hasSubsequence[AA >: A](s: Stream[AA]): Boolean =
+    tails exists (_ startsWith s)
 }
 
 case object Empty extends Stream[Nothing]

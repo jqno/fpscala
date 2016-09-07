@@ -401,4 +401,31 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
     val expected = List(List(1, 2, 3, 4), List(2, 3, 4), List(3, 4), List(4), Nil)
     stream.tails.map(_.toList).toList should be (expected)
   }
+
+
+  behavior of "hasSubsequence"
+
+  val longerStream = Stream(1, 2, 3, 4, 5, 6)
+
+  it should "find subsequences if they exist" in {
+    longerStream.hasSubsequence(Stream(1, 2)) should be (true)
+    longerStream.hasSubsequence(Stream(2, 3, 4)) should be (true)
+    longerStream.hasSubsequence(Stream(4)) should be (true)
+    longerStream.hasSubsequence(Stream(5, 6)) should be (true)
+    longerStream.hasSubsequence(longerStream) should be (true)
+  }
+
+  it should "not find subsequences if they don't exist" in {
+    longerStream.hasSubsequence(Stream(7)) should be (false)
+    longerStream.hasSubsequence(Stream(2, 4)) should be (false)
+  }
+
+  it should "find the second occurrence if the first one fails" in {
+    Stream(1, 2, 3, 4, 5, 2, 7, 8, 9, 10).hasSubsequence(Stream(2, 7, 8)) should be (true)
+  }
+
+  it should "handle edge cases" in {
+    Empty.hasSubsequence(Stream(1)) should be (false)
+    Stream(1).hasSubsequence(Empty) should be (true)
+  }
 }
