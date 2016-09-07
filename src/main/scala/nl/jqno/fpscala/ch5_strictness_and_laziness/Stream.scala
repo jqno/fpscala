@@ -100,7 +100,7 @@ sealed trait Stream[+A] {
 
   // 5.14: startsWith
   def startsWith[AA >: A](s: Stream[AA]): Boolean =
-    zipAll(s) takeWhile { case (_, b) => b.isDefined } forAll { case (a, b) => a.isDefined && a == b }
+    zipAll(s) takeWhile { case (_, b) => b.isDefined } forAll { case (a, b) => a == b }
 }
 
 case object Empty extends Stream[Nothing]
