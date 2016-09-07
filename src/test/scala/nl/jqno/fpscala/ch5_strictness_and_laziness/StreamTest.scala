@@ -389,4 +389,16 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
   it should "be true when the stream starts with the prefix" in {
     Stream.from(1).startsWith(stream) should be (true)
   }
+
+
+  behavior of "tails"
+
+  it should "return only an empty tail when the Stream is empty" in {
+    Empty.tails.map(_.toList).toList should be (List(Nil))
+  }
+
+  it should "return the tails of a Stream" in {
+    val expected = List(List(1, 2, 3, 4), List(2, 3, 4), List(3, 4), List(4), Nil)
+    stream.tails.map(_.toList).toList should be (expected)
+  }
 }
