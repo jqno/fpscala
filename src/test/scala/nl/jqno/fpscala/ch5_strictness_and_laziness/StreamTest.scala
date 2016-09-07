@@ -369,4 +369,24 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
   it should "continue when the left Stream is empty" in {
     Stream.empty[Int].zipAll(stream).toList should be (List((None, Some(1)), (None, Some(2)), (None, Some(3)), (None, Some(4))))
   }
+
+
+  behavior of "startsWith"
+
+  it should "always start with an empty Stream" in {
+    stream.startsWith(Empty) should be (true)
+    Empty.startsWith(Empty) should be (true)
+  }
+
+  it should "be false when the prefix is longer than the stream itself" in {
+    stream.startsWith(Stream.from(1)) should be (false)
+  }
+
+  it should "be false when the prefix is not related to the stream itself" in {
+    stream.startsWith(Stream(3, 1, 5, 4, 2)) should be (false)
+  }
+
+  it should "be true when the stream starts with the prefix" in {
+    Stream.from(1).startsWith(stream) should be (true)
+  }
 }
