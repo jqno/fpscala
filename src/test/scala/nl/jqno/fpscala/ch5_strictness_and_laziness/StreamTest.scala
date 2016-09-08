@@ -428,4 +428,11 @@ class StreamTest extends FlatSpec with Matchers with OneInstancePerTest {
     Empty.hasSubsequence(Stream(1)) should be (false)
     Stream(1).hasSubsequence(Empty) should be (true)
   }
+
+
+  behavior of "scanRight"
+
+  it should "do the example from the book" in {
+    Stream(1, 2, 3).scanRight(0)(_ + _).toList should be (List(6, 5, 3, 0))
+  }
 }
