@@ -123,8 +123,8 @@ sealed trait Stream[+A] {
 
 
   // 5.16: scanRight
-  def scanRight[B](z: => B)(f: (A, B) => B): Stream[B] = foldRight(Stream(z)) { (x, y) =>
-    cons(f(x, y.headOption.get), y)
+  def scanRight[B](z: => B)(f: (A, B) => B): Stream[B] = foldRight(Stream(z)) { (curr, acc) =>
+    acc.take(1).map(f(curr, _)).append(acc)
   }
 }
 
