@@ -25,4 +25,12 @@ object RNGFunctions {
     else
       (n, nextRng)
   }
+
+
+  // 6.2: double
+  def double(rng: RNG): (Double, RNG) = {
+    val (n, nextRng) = rng.nextInt
+    val result = (n.toDouble / Int.MaxValue / 2) + 0.5D
+    (result, nextRng)
+  }
 }

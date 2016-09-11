@@ -40,6 +40,19 @@ class RNGTest extends FlatSpec with Matchers {
   }
 
 
+  behavior of "double"
+
+  it should "return 1 if RNG gives Int.MaxValue" in {
+    val rng = SeedReturningRNG(Int.MaxValue)
+    double(rng)._1 should be (1.0D +- 0.00001D)
+  }
+
+  it should "return 0 if RNG gives Int.MinValue" in {
+    val rng = SeedReturningRNG(Int.MinValue)
+    double(rng)._1 should be (0.0D +- 0.00001D)
+  }
+
+
   case class SeedReturningRNG(seed: Int) extends RNG {
     override def nextInt: (Int, RNG) = (seed, SimpleRNG(seed))
   }
