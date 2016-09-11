@@ -66,4 +66,24 @@ object RNGFunctions {
       val (ns, rng2) = ints(count - 1)(rng1)
       (n :: ns, rng2)
     }
+
+
+  // Taken from the book
+  type Rand[+A] = RNG => (A, RNG)
+
+  val int: Rand[Int] = _.nextInt
+
+  def unit[A](a: A): Rand[A] = rng => (a, rng)
+
+  def map[A, B](s: Rand[A])(f: A => B): Rand[B] = rng => {
+    val (a, rng2) = s(rng)
+    (f(a), rng2)
+  }
+
+  def nonNegativeEven: Rand[Int] = map(nonNegativeInt)(i => i - i % 2)
+
+
+  // 6.5: more elegant double
+  def double2: Rand[Double] =
+    map(int)(i => (i.toDouble / Int.MaxValue / 2) + 0.5D)
 }
