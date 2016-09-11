@@ -109,6 +109,39 @@ class RNGTest extends FlatSpec with Matchers {
   }
 
 
+  behavior of "ints"
+
+  it should "return a list of random, non-equal integers" in {
+    val rng = SimpleRNG(42)
+    val (result, _) = ints(4)(rng)
+    result.combinations(2).foreach(ns => ns(0) should not be ns(1))
+  }
+
+  it should "return a list of the correct length" in {
+    val rng = SimpleRNG(42)
+    val (result, _) = ints(3)(rng)
+    result.size should be (3)
+  }
+
+  it should "return a fresh RNG" in {
+    val rng = SimpleRNG(42)
+    val (result, newRng) = ints(3)(rng)
+    result.foreach(n => newRng.nextInt._1 should not be n)
+  }
+
+  it should "return an empty List when count == 0" in {
+    val rng = SimpleRNG(42)
+    val (result, _) = ints(0)(rng)
+    result should have size 0
+  }
+
+  it should "return an empty list when count < 0" in {
+    val rng = SimpleRNG(42)
+    val (result, _) = ints(-1)(rng)
+    result should have size 0
+  }
+
+
   case class SeedReturningRNG(seed: Int) extends RNG {
     override def nextInt: (Int, RNG) = (seed, SimpleRNG(seed))
   }

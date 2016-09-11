@@ -54,4 +54,16 @@ object RNGFunctions {
     val (d3, rng4) = double(rng3)
     ((d1, d2, d3), rng4)
   }
+
+
+  // 6.4: ints
+  def ints(count: Int)(rng: RNG): (List[Int], RNG) =
+    if (count <= 0) {
+      (Nil, rng)
+    }
+    else {
+      val (n, rng1) = rng.nextInt
+      val (ns, rng2) = ints(count - 1)(rng1)
+      (n :: ns, rng2)
+    }
 }
