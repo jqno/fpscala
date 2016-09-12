@@ -94,4 +94,21 @@ object RNGFunctions {
     val (b, rng3) = rb(rng2)
     (f(a, b), rng3)
   }
+
+
+  // Taken from the book
+  def both[A, B](ra: Rand[A], rb: Rand[B]): Rand[(A, B)] = map2(ra, rb)((_, _))
+
+
+  // 6.7: sequence
+  def sequence[A](rs: List[Rand[A]]): Rand[List[A]] = rs match {
+    case Nil =>
+      unit(Nil)
+    case r :: t => rng =>
+      val (a, rng2) = r(rng)
+      val (as, rng3) = sequence(t)(rng2)
+      (a :: as, rng3)
+  }
+
+  def ints2(count: Int): Rand[List[Int]] = sequence(List.fill(count)(int))
 }
