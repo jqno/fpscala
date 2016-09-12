@@ -101,14 +101,8 @@ object RNGFunctions {
 
 
   // 6.7: sequence
-  def sequence[A](rs: List[Rand[A]]): Rand[List[A]] = rs match {
-    case Nil =>
-      unit(Nil)
-    case r :: t => rng =>
-      val (a, rng2) = r(rng)
-      val (as, rng3) = sequence(t)(rng2)
-      (a :: as, rng3)
-  }
+  def sequence[A](rs: List[Rand[A]]): Rand[List[A]] =
+    rs.foldRight(unit(List.empty[A]))((cur, acc) => map2(cur, acc)(_ :: _))
 
   def ints2(count: Int): Rand[List[Int]] = sequence(List.fill(count)(int))
 }
