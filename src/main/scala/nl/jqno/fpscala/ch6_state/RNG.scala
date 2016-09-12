@@ -86,4 +86,12 @@ object RNGFunctions {
   // 6.5: more elegant double
   def double2: Rand[Double] =
     map(int)(i => (i.toDouble / Int.MaxValue / 2) + 0.5D)
+
+
+  // 6.6: map2
+  def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = rng => {
+    val (a, rng2) = ra(rng)
+    val (b, rng3) = rb(rng2)
+    (f(a, b), rng3)
+  }
 }
