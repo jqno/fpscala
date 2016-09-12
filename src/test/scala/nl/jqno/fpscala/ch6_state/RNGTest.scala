@@ -199,6 +199,25 @@ class RNGTest extends FlatSpec with Matchers {
   }
 
 
+  behavior of "nonNegativeLessThan"
+
+  it should "always return 0 if n == 1" in {
+    val rng = SeedReturningRNG(42)
+    nonNegativeLessThan(1)(rng)._1 should be (0)
+  }
+
+  it should "retry with a second RNG if the complicated condition is met" in {
+    val firstAttemptRng = SeedReturningRNG(Int.MaxValue)
+    val (unexpected, secondAttemptRng) = map(nonNegativeInt)(_ % 5)(firstAttemptRng)
+    val (expected, _) = map(nonNegativeInt)(_ % 5)(secondAttemptRng)
+
+    val (actual, _) = nonNegativeLessThan(5)(firstAttemptRng)
+
+    actual should not be unexpected
+    actual should be (expected)
+  }
+
+
   case class SeedReturningRNG(seed: Int) extends RNG {
     override def nextInt: (Int, RNG) = (seed, SimpleRNG(seed))
   }

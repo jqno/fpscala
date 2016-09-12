@@ -105,4 +105,20 @@ object RNGFunctions {
     rs.foldRight(unit(List.empty[A]))((cur, acc) => map2(cur, acc)(_ :: _))
 
   def ints2(count: Int): Rand[List[Int]] = sequence(List.fill(count)(int))
+
+
+  // 6.8: flatMap
+  def flatMap[A, B](r: Rand[A])(f: A => Rand[B]): Rand[B] = ???
+
+  def nonNegativeLessThan(n: Int): Rand[Int] = rng => {
+    // explicit implementation from the book
+    val (i, rng2) = nonNegativeInt(rng)
+    val mod = i % n
+    if (i + (n - 1) - mod >= 0)
+      (mod, rng2)
+    else {
+      println(s"$n, $i, $mod, ${i + (n - 1) - mod}")
+      nonNegativeLessThan(n)(rng2)
+    }
+  }
 }
