@@ -108,17 +108,17 @@ object RNGFunctions {
 
 
   // 6.8: flatMap
-  def flatMap[A, B](r: Rand[A])(f: A => Rand[B]): Rand[B] = ???
-
-  def nonNegativeLessThan(n: Int): Rand[Int] = rng => {
-    // explicit implementation from the book
-    val (i, rng2) = nonNegativeInt(rng)
-    val mod = i % n
-    if (i + (n - 1) - mod >= 0)
-      (mod, rng2)
-    else {
-      println(s"$n, $i, $mod, ${i + (n - 1) - mod}")
-      nonNegativeLessThan(n)(rng2)
-    }
+  def flatMap[A, B](r: Rand[A])(f: A => Rand[B]): Rand[B] = rng => {
+    val (a, rng2) = r(rng)
+    f(a)(rng2)
   }
+
+  def nonNegativeLessThan(n: Int): Rand[Int] =
+    flatMap(nonNegativeInt) { i =>
+      val mod = i % n
+      if (i + (n - 1) - mod >= 0)
+        unit(mod)
+      else
+        nonNegativeLessThan(n)
+    }
 }
