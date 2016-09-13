@@ -218,6 +218,24 @@ class RNGTest extends FlatSpec with Matchers {
   }
 
 
+  behavior of "map and map2 in terms of flatMap"
+
+  it should "be like map" in {
+    val rng = SimpleRNG(0)
+    val r = unit(42)
+    val actual = map_2(r)(_ + 1)(rng)._1
+    actual should be (43)
+  }
+
+  it should "behave like intDouble" in {
+    val intDouble2 = map2_2(int, double)((_, _))
+    val rng = SeedReturningRNG(Int.MinValue)
+    val result = intDouble2(rng)._1
+    result._1 should be (Int.MinValue)
+    result._2 should not be (0.0D +- epsilon)
+  }
+
+
   case class SeedReturningRNG(seed: Int) extends RNG {
     override def nextInt: (Int, RNG) = (seed, SimpleRNG(seed))
   }
