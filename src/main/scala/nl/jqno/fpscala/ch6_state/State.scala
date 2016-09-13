@@ -19,8 +19,8 @@ object State {
     sa.flatMap(a => sb.map(b => f(a, b)))
 
   def sequence[S, A](ss: List[State[S, A]]): State[S, List[A]] =
-    ss.foldRight(unit[S, List[A]](List.empty[A]))((curr, acc) => map2(curr, acc)(_ :: _))
+    ss.foldRight(unit[S, List[A]](List.empty))((curr, acc) => map2(curr, acc)(_ :: _))
 
   def unit[S, A](a: A): State[S, A] =
-    State((s: S) => (a, s))
+    State(s => (a, s))
 }
