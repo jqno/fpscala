@@ -23,13 +23,14 @@ class CandyDispenserTest extends FlatSpec with Matchers {
 
   it should "unlock when a coin is inserted and there's candy left" in {
     val actual = simulateMachine(oneCoin).run(lockedAndLoaded)
-    actual._1 should be ((10, 5))
-    actual._2.locked should be (false)
+    actual._1 should be ((11, 5))
+    actual._2.locked should be (unlocked)
   }
 
   it should "dispense a candy and become locked when it's unlocked and gets a turn" in {
     val actual = simulateMachine(oneTurn).run(unlockedAndLoaded)
-    actual._1 should be ((11, 4))
+    actual._1 should be ((10, 4))
+    actual._2.locked should be (locked)
   }
 
   it should "ignore a turn if it's locked" in {
@@ -43,13 +44,13 @@ class CandyDispenserTest extends FlatSpec with Matchers {
   }
 
   it should "ignore a turn if it's unlocked but out of candy" in {
-    val initial = Machine(unlocked, 0, 1)
+    val initial = Machine(unlocked, 1, 0)
     val actual = simulateMachine(oneTurn).run(initial)
     actual._2 should be (initial)
   }
 
   it should "ignore a coin if it's locked but out of candy" in {
-    val initial = Machine(locked, 0, 1)
+    val initial = Machine(locked, 1, 0)
     val actual = simulateMachine(oneCoin).run(initial)
     actual._2 should be (initial)
   }
