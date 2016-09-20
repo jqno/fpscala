@@ -9,7 +9,7 @@ object Par {
     override def isDone = true
     override def get(timeout: Long, units: TimeUnit) = get
     override def isCancelled = false
-    override def cancel(evenIfRunning: Boolean): Boolean = false
+    override def cancel(evenIfRunning: Boolean) = false
   }
 
   def map2[A, B, C](a: Par[A], b: Par[B])(f: (A, B) => C): Par[C] =
@@ -23,4 +23,38 @@ object Par {
     es => es.submit(new Callable[A] {
       override def call = a(es).get
     })
+
+
+  // Exercise 7.3: map2 with timeout
+  def map2[A, B, C](a: Par[A], b: Par[B])(f: (A, B) => C)(timeout: Long, units: TimeUnit): Par[C] =
+    (es: ExecutorService) => {
+      val af = a(es)
+      val bf = b(es)
+      Map2Future(af, bf, f)
+    }
+
+  // I got as far as the case class, with the correct constructor signature
+  // and all methods filled in except both `get` overloads.
+  // Then I cheated and looked at the answer :-O
+  private case class Map2Future[A, B, C](af: Future[A], bf: Future[B], f: (A, B) => C) extends Future[C] {
+    @volatile var cache: Option[C] = None
+    override def isDone = cache.isDefined
+    override def get = compute(Long.MaxValue)
+    override def get(timeout: Long, units: TimeUnit) = compute(TimeUnit.NANOSECONDS.convert(timeout, units))
+    override def isCancelled = af.isCancelled || bf.isCancelled
+    override def cancel(evenIfRunning: Boolean) = af.cancel(evenIfRunning) || bf.cancel(evenIfRunning)
+
+    private def compute(timeoutInNanos: Long): C = cache match {
+      case Some(c) => c
+      case None =>
+        val start = System.nanoTime
+        val ar = af.get(timeoutInNanos, TimeUnit.NANOSECONDS)
+        val stop = System.nanoTime
+        val aTime = stop - start
+        val br = bf.get(timeoutInNanos - aTime, TimeUnit.NANOSECONDS)
+        val ret = f(ar, br)
+        cache = Some(ret)
+        ret
+    }
+  }
 }
