@@ -1,6 +1,15 @@
 import java.util.concurrent.{Callable, ExecutorService, Future, TimeUnit}
 
 object Par {
+
+  // 7.2: representation
+  // We can have an ADT with two case classes that implement the Par trait:
+  // one for unit, which is strict, and one for fork, which isn't.
+  // run could pattern match over it, and present the Fork to an executor service.
+  // We could also wrap it in a Future, but then we'd probably have to await.
+  // Do we want that!?
+
+
   type Par[A] = ExecutorService => Future[A]
 
   def unit[A](a: A): Par[A] = (es: ExecutorService) => UnitFuture(a)
@@ -25,6 +34,7 @@ object Par {
     })
 
 
+  // Exercise 7.1: map2 signature
   // Exercise 7.3: map2 with timeout
   def map2[A, B, C](a: Par[A], b: Par[B])(f: (A, B) => C)(timeout: Long, units: TimeUnit): Par[C] =
     (es: ExecutorService) => {
