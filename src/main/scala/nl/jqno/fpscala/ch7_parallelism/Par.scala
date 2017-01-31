@@ -67,4 +67,9 @@ object Par {
         ret
     }
   }
+
+
+  // Exercise 7.4: asyncF
+  def asyncF[A, B](f: A => B): A => Par[B] =
+    a => fork(unit(f(a)))
 }
