@@ -33,6 +33,9 @@ object Par {
       override def call = a(es).get
     })
 
+  def lazyUnit[A](a: => A): Par[A] =
+    fork(unit(a))
+
 
   // Exercise 7.1: map2 signature
   // Exercise 7.3: map2 with timeout
@@ -71,5 +74,5 @@ object Par {
 
   // Exercise 7.4: asyncF
   def asyncF[A, B](f: A => B): A => Par[B] =
-    a => fork(unit(f(a)))
+    a => lazyUnit(f(a))
 }
