@@ -21,7 +21,7 @@ object Par {
     override def cancel(evenIfRunning: Boolean) = false
   }
 
-  def map2[A, B, C](a: Par[A], b: Par[B])(f: (A, B) => C): Par[C] =
+  def map2noTimeout[A, B, C](a: Par[A], b: Par[B])(f: (A, B) => C): Par[C] =
     (es: ExecutorService) => {
       val af = a(es)
       val bf = b(es)
@@ -75,4 +75,8 @@ object Par {
   // Exercise 7.4: asyncF
   def asyncF[A, B](f: A => B): A => Par[B] =
     a => lazyUnit(f(a))
+
+  // Exercise 7.5: sequence
+  def sequence[A](ps: List[Par[A]]): Par[List[A]] =
+    ps.foldLeft(unit(List[A]()))((acc, cur) => map2noTimeout(acc, cur)((a, c) => c :: a))
 }
