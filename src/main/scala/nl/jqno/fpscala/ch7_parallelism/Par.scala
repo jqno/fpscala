@@ -36,6 +36,8 @@ object Par {
   def lazyUnit[A](a: => A): Par[A] =
     fork(unit(a))
 
+  def run[A](s: ExecutorService)(a: Par[A]): Future[A] = a(s)
+
 
   // Exercise 7.1: map2 signature
   // Exercise 7.3: map2 with timeout
@@ -78,5 +80,5 @@ object Par {
 
   // Exercise 7.5: sequence
   def sequence[A](ps: List[Par[A]]): Par[List[A]] =
-    ps.foldLeft(unit(List[A]()))((acc, cur) => map2noTimeout(acc, cur)((a, c) => c :: a))
+    ps.foldRight(unit(List[A]()))((cur, acc) => map2noTimeout(cur, acc)((c, a) => c :: a))
 }
