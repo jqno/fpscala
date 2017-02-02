@@ -81,4 +81,18 @@ object Par {
   // Exercise 7.5: sequence
   def sequence[A](ps: List[Par[A]]): Par[List[A]] =
     ps.foldRight(unit(List[A]()))((cur, acc) => map2noTimeout(cur, acc)((c, a) => c :: a))
+
+  def parMap[A, B](ps: List[A])(f: A => B): Par[List[B]] = fork {
+    val fbs: List[Par[B]] = ps.map(asyncF(f))
+    sequence(fbs)
+  }
+
+  // Exercise 7.6: parFilter
+  def map[A, B](a: Par[A])(f: A => B): Par[B] = map2noTimeout(a, unit(())) { case (a, _) => f(a) }
+
+  def parFilter[A](as: List[A])(f: A => Boolean): Par[List[A]] = fork {
+    val pars: List[Par[List[A]]] =
+      as.map(asyncF((a: A) => if (f(a)) List(a) else List()))
+    map(sequence(pars))(_.flatten)
+  }
 }

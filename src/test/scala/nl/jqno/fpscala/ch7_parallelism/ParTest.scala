@@ -15,4 +15,15 @@ class ParTest extends FlatSpec with Matchers with ScalaFutures {
     val actual = Par.run(pool)(out).get
     actual should be (List(1, 2, 3))
   }
+
+
+  // 7.6: parFilter
+  behavior of "parFilter"
+
+  it should "return a Par of a filtered sequence" in {
+    val in = List(1, 2, 3, 4)
+    val out = parFilter(in)(_ % 2 == 0)
+    val actual = Par.run(pool)(out).get
+    actual should be (List(2, 4))
+  }
 }
