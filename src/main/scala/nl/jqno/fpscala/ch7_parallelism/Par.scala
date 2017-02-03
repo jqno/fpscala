@@ -95,4 +95,10 @@ object Par {
       as.map(asyncF((a: A) => if (f(a)) List(a) else List()))
     map(sequence(pars))(_.flatten)
   }
+
+  // Exercise 7.7: map(map(y)(g))(f) == map(y)(f compose g)
+  // skip :/
+  
+  // Exercise 7.8: bugs with ExecutorServices
+  // With a single-threaded ExecutorService, you get deadlock if you fork inside a fork.
 }
