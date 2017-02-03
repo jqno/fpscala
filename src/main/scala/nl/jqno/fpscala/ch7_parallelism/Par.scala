@@ -101,4 +101,7 @@ object Par {
   
   // Exercise 7.8: bugs with ExecutorServices
   // With a single-threaded ExecutorService, you get deadlock if you fork inside a fork.
+
+  // Exercise 7.9: bugs with fixed-size threadpools
+  // Just nest the forks deeply enough.
 }
