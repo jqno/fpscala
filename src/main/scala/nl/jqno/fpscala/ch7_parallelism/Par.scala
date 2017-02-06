@@ -143,4 +143,12 @@ object Par {
 
   def choiceMap[K, V](key: Par[K])(choices: Map[K, Par[V]]): Par[V] =
     chooser(key)(choices)
+
+
+  // Exercise 7.14: join
+  def join[A](a: Par[Par[A]]): Par[A] = 
+    es => run(es)(run(es)(a).get())
+
+  def flatMap[A, B](pa: Par[A])(f: A => Par[B]) =
+    join(map(pa)(f))
 }
