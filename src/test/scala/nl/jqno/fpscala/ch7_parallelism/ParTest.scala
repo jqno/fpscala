@@ -46,7 +46,7 @@ class ParTest extends FlatSpec with Matchers with ScalaFutures {
 
   it should "I dunno, throw an exception if n is out of range of the choices I guess" in {
     val choices = Nil
-    intercept[IllegalArgumentException] {
+    intercept[IndexOutOfBoundsException] {
       get(choiceN(unit(0), choices))
     }
   }
@@ -79,10 +79,14 @@ class ParTest extends FlatSpec with Matchers with ScalaFutures {
 
   it should "Throw an exception if the key doesn't exist in the map" in {
     val choices = Map.empty[Int, Par[Int]]
-    intercept[IllegalArgumentException] {
+    intercept[NoSuchElementException] {
       get(choiceMap(unit(0))(choices))
     }
   }
+
+
+  // Exercise 7.13: chooser
+  // We'll test this one by implementing choice, choiceN and choiceMap in terms of it and running the tests on these functions.
 
   private def get[A](p: Par[A]): A =
     Par.run(pool)(p).get

@@ -109,22 +109,38 @@ object Par {
   // I'm skipping this one for now.
 
   // Exercise 7.11: choiceN & choice
-  def choiceN[A](n: Par[Int], choices: List[Par[A]]): Par[A] = es => {
+  def choiceN0[A](n: Par[Int], choices: List[Par[A]]): Par[A] = es => {
     val choice = run(es)(n).get
     if (choice < 0 || choice >= choices.size)
-      throw new IllegalArgumentException
+      throw new IndexOutOfBoundsException
     choices(choice)(es)
   }
 
-  def choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] =
+  def choice0[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] =
     choiceN(map(cond)(if (_) 0 else 1), List(t, f))
 
 
   // Exercise 7.12: choiceMap
-  def choiceMap[K, V](key: Par[K])(choices: Map[K, Par[V]]): Par[V] = es => {
+  def choiceMap0[K, V](key: Par[K])(choices: Map[K, Par[V]]): Par[V] = es => {
     val choice = run(es)(key).get
     if (!choices.contains(choice))
-      throw new IllegalArgumentException
+      throw new NoSuchElementException
     choices(choice)(es)
   }
+
+
+  // Exercise 7.13: chooser
+  def chooser[A, B](pa: Par[A])(choices: A => Par[B]): Par[B] = es => {
+    val a = run(es)(pa).get
+    run(es)(choices(a))
+  }
+
+  def choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] =
+    chooser(cond)(if (_) t else f)
+
+  def choiceN[A](n: Par[Int], choices: List[Par[A]]): Par[A] =
+    chooser(n)(choices)
+
+  def choiceMap[K, V](key: Par[K])(choices: Map[K, Par[V]]): Par[V] =
+    chooser(key)(choices)
 }
