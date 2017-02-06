@@ -107,4 +107,9 @@ object Par {
 
   // Exercise 7.10: handling errors
   // I'm skipping this one for now.
+
+  // Exercise 7.11: choiceN & choice
+  def choiceN[A](n: Par[Int], choices: List[Par[A]]): Par[A] = ???
+
+  def choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] = ???
 }
