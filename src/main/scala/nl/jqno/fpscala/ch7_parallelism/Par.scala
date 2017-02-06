@@ -104,4 +104,7 @@ object Par {
 
   // Exercise 7.9: bugs with fixed-size threadpools
   // Just nest the forks deeply enough.
+
+  // Exercise 7.10: handling errors
+  // I'm skipping this one for now.
 }
