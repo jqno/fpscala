@@ -66,6 +66,24 @@ class ParTest extends FlatSpec with Matchers with ScalaFutures {
     actual should be (1)
   }
 
+
+  // Exercise 7.12: choiceMap
+  behavior of "choiceMap"
+
+  it should "return the element that belongs to the given key" in {
+    val choices = Map(0 -> unit(0), 1 -> unit(1))
+    val out = choiceMap(unit(0))(choices)
+    val actual = get(out)
+    actual should be (0)
+  }
+
+  it should "Throw an exception if the key doesn't exist in the map" in {
+    val choices = Map.empty[Int, Par[Int]]
+    intercept[IllegalArgumentException] {
+      get(choiceMap(unit(0))(choices))
+    }
+  }
+
   private def get[A](p: Par[A]): A =
     Par.run(pool)(p).get
 }

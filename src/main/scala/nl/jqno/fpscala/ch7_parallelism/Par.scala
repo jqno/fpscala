@@ -118,4 +118,13 @@ object Par {
 
   def choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] =
     choiceN(map(cond)(if (_) 0 else 1), List(t, f))
+
+
+  // Exercise 7.12: choiceMap
+  def choiceMap[K, V](key: Par[K])(choices: Map[K, Par[V]]): Par[V] = es => {
+    val choice = run(es)(key).get
+    if (!choices.contains(choice))
+      throw new IllegalArgumentException
+    choices(choice)(es)
+  }
 }
