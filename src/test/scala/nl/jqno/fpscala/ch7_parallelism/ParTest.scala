@@ -47,7 +47,7 @@ class ParTest extends FlatSpec with Matchers with ScalaFutures {
   it should "I dunno, throw an exception if n is out of range of the choices I guess" in {
     val choices = Nil
     intercept[IllegalArgumentException] {
-      choiceN(unit(0), choices)
+      get(choiceN(unit(0), choices))
     }
   }
 

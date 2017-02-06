@@ -109,7 +109,13 @@ object Par {
   // I'm skipping this one for now.
 
   // Exercise 7.11: choiceN & choice
-  def choiceN[A](n: Par[Int], choices: List[Par[A]]): Par[A] = ???
+  def choiceN[A](n: Par[Int], choices: List[Par[A]]): Par[A] = es => {
+    val choice = run(es)(n).get
+    if (choice < 0 || choice >= choices.size)
+      throw new IllegalArgumentException
+    choices(choice)(es)
+  }
 
-  def choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] = ???
+  def choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] =
+    choiceN(map(cond)(if (_) 0 else 1), List(t, f))
 }
