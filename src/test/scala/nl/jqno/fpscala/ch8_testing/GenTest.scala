@@ -21,6 +21,22 @@ class GenTest extends FlatSpec with Matchers {
     force(c) should be (79)
   }
 
+
+  // Exercise 8.5: unit, boolean, listOfN
+  behavior of "unit"
+
+  it should "generate the given value" in {
+    val a = Gen.unit("hello world")
+    force(a) should be ("hello world")
+  }
+
+  behavior of "boolean"
+
+  it should "generate a boolean" in {
+    val a = Gen.boolean
+    force(a) should be (false)
+  }
+
   private def force[A](gen: Gen[A]): A =
     gen.sample.run(rng)._1
 }
