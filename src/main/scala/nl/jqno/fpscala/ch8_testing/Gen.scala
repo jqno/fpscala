@@ -26,6 +26,15 @@ shell, which you can fill in and modify while working through the chapter.
 // * The max of a list with only positive elements should be positive
 // * The max of a list should be greater than or equal to the max of the same list with the original max taken out
 
+// Exercise 8.3: &&
+//
+// def && (p: Prop): Prop = {
+//   val self = this
+//   new Prop {
+//     override def check = self.check && p.check
+//   }
+// }
+
 trait Prop {
 }
 
