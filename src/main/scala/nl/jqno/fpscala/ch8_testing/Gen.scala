@@ -1,4 +1,4 @@
-package nl.jqno.fpscala.testing
+package nl.jqno.fpscala.ch8_testing
 
 import nl.jqno.fpscala.ch5_strictness_and_laziness.Stream
 import nl.jqno.fpscala.ch6_state._
@@ -43,10 +43,14 @@ object Prop {
 }
 
 object Gen {
+  // Exercise 8.4: Gen.choose
+  def choose(start: Int, stopExclusive: Int): Gen[Int] =
+    Gen(State(RNGFunctions.nonNegativeInt).map(n => start + n % (stopExclusive - start)))
+
   def unit[A](a: => A): Gen[A] = ???
 }
 
-trait Gen[A] {
+case class Gen[A](sample: State[RNG, A]) {
   def map[B](f: A => B): Gen[B] = ???
   def flatMap[B](f: A => Gen[B]): Gen[B] = ???
 }
