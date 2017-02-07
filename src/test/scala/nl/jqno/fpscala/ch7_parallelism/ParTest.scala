@@ -1,3 +1,5 @@
+package nl.jqno.fpscala.ch7_parallelism
+
 import Par._
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.concurrent.ScalaFutures

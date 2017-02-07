@@ -1,3 +1,5 @@
+package nl.jqno.fpscala.ch7_parallelism
+
 import java.util.concurrent.{Callable, ExecutorService, Future, TimeUnit}
 
 object Par {
