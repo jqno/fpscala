@@ -25,8 +25,8 @@ object Gen {
 }
 
 trait Gen[A] {
-  def map[A,B](f: A => B): Gen[B] = ???
-  def flatMap[A,B](f: A => Gen[B]): Gen[B] = ???
+  def map[B](f: A => B): Gen[B] = ???
+  def flatMap[B](f: A => Gen[B]): Gen[B] = ???
 }
 
 trait SGen[+A] {
