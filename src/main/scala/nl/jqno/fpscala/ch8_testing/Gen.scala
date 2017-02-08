@@ -53,6 +53,9 @@ object Gen {
 
   def boolean: Gen[Boolean] =
     Gen(State(RNGFunctions.nonNegativeLessThan(2)).map(i => if (i == 0) true else false))
+
+  def listOfN[A](n: Int, g: Gen[A]): Gen[List[A]] =
+    Gen(State.sequence(List.fill(n)(State(rng => g.sample.run(rng)))))
 }
 
 case class Gen[A](sample: State[RNG, A]) {

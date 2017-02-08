@@ -37,6 +37,16 @@ class GenTest extends FlatSpec with Matchers {
     force(a) should be (false)
   }
 
+  behavior of "listOfN"
+
+  it should "generate a list of things" in {
+    val a = Gen.listOfN(3, Gen.boolean)
+    force(a) should be (List(false, true, false))
+
+    val b = Gen.listOfN(0, Gen.boolean)
+    force(b) should be (Nil)
+  }
+
   private def force[A](gen: Gen[A]): A =
     gen.sample.run(rng)._1
 }
