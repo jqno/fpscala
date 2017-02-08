@@ -55,7 +55,7 @@ object Gen {
     Gen(State(RNGFunctions.nonNegativeLessThan(2)).map(i => if (i == 0) true else false))
 
   def listOfN[A](n: Int, g: Gen[A]): Gen[List[A]] =
-    Gen(State.sequence(List.fill(n)(State(rng => g.sample.run(rng)))))
+    Gen(State.sequence(List.fill(n)(g.sample)))
 }
 
 case class Gen[A](sample: State[RNG, A]) {
