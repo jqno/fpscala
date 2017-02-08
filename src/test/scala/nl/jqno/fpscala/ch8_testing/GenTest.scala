@@ -23,21 +23,21 @@ class GenTest extends FlatSpec with Matchers {
 
 
   // Exercise 8.5: unit, boolean, listOfN
-  behavior of "unit"
+  behavior of "Gen.unit"
 
   it should "generate the given value" in {
     val a = Gen.unit("hello world")
     force(a) should be ("hello world")
   }
 
-  behavior of "boolean"
+  behavior of "Gen.boolean"
 
   it should "generate a boolean" in {
     val a = Gen.boolean
     force(a) should be (false)
   }
 
-  behavior of "listOfN"
+  behavior of "Gen.listOfN"
 
   it should "generate a list of things" in {
     val a = Gen.listOfN(3, Gen.boolean)
@@ -45,6 +45,15 @@ class GenTest extends FlatSpec with Matchers {
 
     val b = Gen.listOfN(0, Gen.boolean)
     force(b) should be (Nil)
+  }
+
+
+  // Exercise 8.6: flatMap and listOfN
+  behavior of "listOfN"
+
+  it should "generate a list of unspecified length" in {
+    val a = Gen.unit(0).listOfN(Gen.choose(0, 10))
+    force(a) should be (List(0, 0, 0))
   }
 
   private def force[A](gen: Gen[A]): A =
