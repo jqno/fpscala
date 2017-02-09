@@ -126,6 +126,17 @@ sealed trait Stream[+A] {
   def scanRight[B](z: => B)(f: (A, B) => B): Stream[B] = foldRight(Stream(z)) { (curr, acc) =>
     acc.take(1).map(f(curr, _)).append(acc)
   }
+
+
+  // Necessary for chapter 8
+  def zip[B](s2: Stream[B]): Stream[(A,B)] =
+    zipWith(s2)((_,_))
+
+  @annotation.tailrec
+  final def find(f: A => Boolean): Option[A] = this match {
+    case Empty => None
+    case Cons(h, t) => if (f(h())) Some(h()) else t().find(f)
+  }
 }
 
 case object Empty extends Stream[Nothing]
