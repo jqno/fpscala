@@ -1,7 +1,6 @@
 package nl.jqno.fpscala.ch8_testing
 
 import org.scalatest.{FlatSpec, Matchers}
-import org.scalatest.concurrent.ScalaFutures
 import nl.jqno.fpscala.ch6_state.SimpleRNG
 
 class GenTest extends FlatSpec with Matchers {
