@@ -40,6 +40,7 @@ object Gen {
   def choose(start: Int, stopExclusive: Int): Gen[Int] =
     Gen(State(RNGFunctions.nonNegativeInt).map(n => start + n % (stopExclusive - start)))
 
+
   // Exercise 8.5: unit, boolean, listOfN
   def unit[A](a: => A): Gen[A] =
     Gen(State.unit(a))
@@ -49,6 +50,11 @@ object Gen {
 
   def listOfN[A](n: Int, g: Gen[A]): Gen[List[A]] =
     Gen(State.sequence(List.fill(n)(g.sample)))
+
+
+  // Exercise 8.7: union
+  def union[A](g1: Gen[A], g2: Gen[A]): Gen[A] =
+    Gen.boolean.flatMap(b => if (b) g1 else g2)
 }
 
 case class Gen[A](sample: State[RNG, A]) {

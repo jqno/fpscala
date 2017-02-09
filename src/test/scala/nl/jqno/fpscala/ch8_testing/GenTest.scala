@@ -56,6 +56,15 @@ class GenTest extends FlatSpec with Matchers {
     force(a) should be (List(0, 0, 0, 0, 0, 0, 0, 0, 0))
   }
 
+
+  // Exercise 8.7: union
+  behavior of "union"
+
+  it should "pull a value from one of two Gens" in {
+    val a = Gen.union(Gen.unit(1), Gen.unit(2))
+    force(a) should be (2)
+  }
+
   private def force[A](gen: Gen[A]): A =
     gen.sample.run(rng)._1
 }
