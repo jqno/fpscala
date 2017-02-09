@@ -53,7 +53,7 @@ class GenTest extends FlatSpec with Matchers {
 
   it should "generate a list of unspecified length" in {
     val a = Gen.unit(0).listOfN(Gen.choose(0, 10))
-    force(a) should be (List(0, 0, 0))
+    force(a) should be (List(0, 0, 0, 0, 0, 0, 0, 0, 0))
   }
 
   private def force[A](gen: Gen[A]): A =
