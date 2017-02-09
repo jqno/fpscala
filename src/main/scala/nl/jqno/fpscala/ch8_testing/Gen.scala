@@ -55,6 +55,15 @@ object Gen {
   // Exercise 8.7: union
   def union[A](g1: Gen[A], g2: Gen[A]): Gen[A] =
     Gen.boolean.flatMap(b => if (b) g1 else g2)
+
+
+  // Exercise 8.8: weighted
+  def weighted[A](g1: (Gen[A], Double), g2: (Gen[A], Double)): Gen[A] = {
+    val total = g1._2 + g2._2
+    Gen(State(RNGFunctions.double)).flatMap { d =>
+      if (d * total <= g1._2) g1._1 else g2._1
+    }
+  }
 }
 
 case class Gen[A](sample: State[RNG, A]) {

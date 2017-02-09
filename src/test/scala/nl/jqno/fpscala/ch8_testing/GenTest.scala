@@ -65,6 +65,18 @@ class GenTest extends FlatSpec with Matchers {
     force(a) should be (2)
   }
 
+
+  // Exercise 8.8: weighted
+  behavior of "weighted"
+
+  it should "pull a value from one of two Gens, but decided by a weight" in {
+    val a = Gen.weighted((Gen.unit(1), 10.0), (Gen.unit(2), 1.0))
+    force(a) should be (1)
+
+    val b = Gen.weighted((Gen.unit(1), 1.0), (Gen.unit(2), 10.0))
+    force(b) should be (2)
+  }
+
   private def force[A](gen: Gen[A]): A =
     gen.sample.run(rng)._1
 }
