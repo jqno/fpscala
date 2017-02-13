@@ -79,6 +79,27 @@ case class Gen[A](sample: State[RNG, A]) {
 }
 
 case class Prop(run: (TestCases, RNG) => Result) {
+
+  // Exercise 8.9: && and ||
+  def && (p: Prop): Prop = Prop { (n, rng) =>
+    run(n, rng) match {
+      case Passed => p.run(n, rng) match {
+        case Passed => Passed
+        case Falsified(f, s) => Falsified(f, s + n)
+      }
+      case f: Falsified => f
+    }
+  }
+
+  def || (p: Prop): Prop = Prop { (n, rng) =>
+    run(n, rng) match {
+      case Passed => Passed
+      case f: Falsified => p.run(n, rng) match {
+        case Passed => Passed
+        case Falsified(f2, s2) => Falsified(f2, f.successes + s2)
+      }
+    }
+  }
 }
 
 object Prop {

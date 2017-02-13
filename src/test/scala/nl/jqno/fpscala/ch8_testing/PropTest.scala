@@ -22,6 +22,24 @@ class PropTest extends FlatSpec with Matchers {
   }
 
 
+  // Exercise 8.9: && and ||
+  behavior of "&&"
+
+  it should "behave like logical and" in {
+    val p1 = Prop.forAll(Gen.unit(1))(_ == 1)
+    val p2 = Prop.forAll(Gen.unit(2))(_ == 1)
+    run(p1 && p2) should be (Falsified("2", 10))
+  }
+
+  behavior of "||"
+
+  it should "behave like logical or" in {
+    val p1 = Prop.forAll(Gen.unit(1))(_ == 1)
+    val p2 = Prop.forAll(Gen.unit(2))(_ == 2)
+    run(p1 || p2) should be (Passed)
+  }
+
+
   private def run(p: Prop): Result =
     p.run(10, rng)
 }
