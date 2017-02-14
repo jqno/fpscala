@@ -76,6 +76,10 @@ case class Gen[A](sample: State[RNG, A]) {
 
   def listOfN(size: Gen[Int]): Gen[List[A]] =
     size.flatMap(n => Gen.listOfN(n, this))
+
+
+  // Exercise 8.10: convert Gen to SGen
+  def unsized: SGen[A] = SGen(_ => this)
 }
 
 case class Prop(run: (TestCases, RNG) => Result) {
@@ -135,6 +139,6 @@ object Prop {
     s"stack trace: ${e.getStackTrace.mkString("\n")}"
 }
 
-trait SGen[+A] {
+case class SGen[A](forSize: Int => Gen[A]) {
 
 }
