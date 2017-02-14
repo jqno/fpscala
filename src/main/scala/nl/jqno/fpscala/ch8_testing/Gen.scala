@@ -141,4 +141,14 @@ object Prop {
 
 case class SGen[A](forSize: Int => Gen[A]) {
 
+  // Exercise 8.11: delegations
+  def map[B](f: A => B): SGen[B] =
+    SGen(i => forSize(i).map(f))
+
+  def flatMap[B](f: A => SGen[B]): SGen[B] =
+    SGen(i => forSize(i).flatMap(a => f(a).forSize(i)))
+
+  def listOfN(size: SGen[Int]): SGen[List[A]] =
+    SGen(i => forSize(i).listOfN(size.forSize(i)))
 }
+
