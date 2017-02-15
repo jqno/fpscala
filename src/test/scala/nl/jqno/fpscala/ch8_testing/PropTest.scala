@@ -41,5 +41,5 @@ class PropTest extends FlatSpec with Matchers {
 
 
   private def run(p: Prop): Result =
-    p.run(10, rng)
+    p.run(0, 10, rng)
 }

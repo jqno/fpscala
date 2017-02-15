@@ -82,12 +82,12 @@ case class Gen[A](sample: State[RNG, A]) {
   def unsized: SGen[A] = SGen(_ => this)
 }
 
-case class Prop(run: (TestCases, RNG) => Result) {
+case class Prop(run: (MaxSize, TestCases, RNG) => Result) {
 
   // Exercise 8.9: && and ||
-  def && (p: Prop): Prop = Prop { (n, rng) =>
-    run(n, rng) match {
-      case Passed => p.run(n, rng) match {
+  def && (p: Prop): Prop = Prop { (max, n, rng) =>
+    run(max, n, rng) match {
+      case Passed => p.run(max, n, rng) match {
         case Passed => Passed
         case Falsified(f, s) => Falsified(f, s + n)
       }
@@ -95,10 +95,10 @@ case class Prop(run: (TestCases, RNG) => Result) {
     }
   }
 
-  def || (p: Prop): Prop = Prop { (n, rng) =>
-    run(n, rng) match {
+  def || (p: Prop): Prop = Prop { (max, n, rng) =>
+    run(max, n, rng) match {
       case Passed => Passed
-      case f: Falsified => p.run(n, rng) match {
+      case f: Falsified => p.run(max, n, rng) match {
         case Passed => Passed
         case Falsified(f2, s2) => Falsified(f2, f.successes + s2)
       }
@@ -108,7 +108,7 @@ case class Prop(run: (TestCases, RNG) => Result) {
 
 object Prop {
   def forAll[A](gen: Gen[A])(f: A => Boolean): Prop = Prop {
-    (n, rng) => randomStream(gen)(rng).zip(Stream.from(0)).take(n).map {
+    (max, n, rng) => randomStream(gen)(rng).zip(Stream.from(0)).take(n).map {
       case (a, i) => try {
           if (f(a)) Passed else Falsified(a.toString, i)
         }
@@ -116,6 +116,28 @@ object Prop {
     }.find(_.isFalsified).getOrElse(Passed)
   }
 
+  def forAll[A](gen: SGen[A])(f: A => Boolean): Prop =
+    forAll(gen(_))(f)
+
+  def forAll[A](gen: Int => Gen[A])(f: A => Boolean): Prop = Prop { (max, n, rng) =>
+    val casesPerSize = (n + (max - 1)) / max
+    val props: Stream[Prop] =
+      Stream.from(0).take((n min max) + 1).map(i => forAll(gen(i))(f))
+    val prop: Prop = props.map(p => Prop { (max, _, rng) =>
+      p.run(max, casesPerSize, rng)
+    }).toList.reduce(_ && _)
+    prop.run(max, n, rng)
+  }
+
+  def run(p: Prop, maxSize: Int = 100, testCases: Int = 100, rng: RNG = SimpleRNG(System.currentTimeMillis)): Unit =
+    p.run(maxSize, testCases, rng) match {
+      case Falsified(msg, n) =>
+        println(s"! Falsified after $n passed tests:\n $msg")
+      case Passed =>
+        println(s"+ OK, passed $testCases tests.")
+    }
+
+  type MaxSize = Int
   type TestCases = Int
   type FailedCase = String
   type SuccessCount = Int
@@ -140,6 +162,7 @@ object Prop {
 }
 
 case class SGen[A](forSize: Int => Gen[A]) {
+  def apply(n: Int): Gen[A] = forSize(n)
 
   // Exercise 8.11: delegations
   def map[B](f: A => B): SGen[B] =
