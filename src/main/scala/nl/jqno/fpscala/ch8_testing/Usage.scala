@@ -5,7 +5,7 @@ import SGen._
 
 object Usage extends App {
   val smallInt = Gen.choose(-10, 10)
-  val maxProp = forAll(listOf(smallInt)) { ns =>
+  val maxProp = forAll(listOf1(smallInt)) { ns =>
     val max = ns.max
     !ns.exists(_ > max)
   }
