@@ -11,5 +11,17 @@ object Usage extends App {
   }
 
   Prop.run(maxProp)
+
+
+  // Exercise 8.14: sorted
+  val sortedProp = forAll(listOf(smallInt)) { ns =>
+    val sorted = ns.sorted
+    sorted.sliding(2).forall { _ match {
+      case a :: b :: Nil => a <= b
+      case _ => true
+    }}
+  }
+
+  Prop.run(sortedProp)
 }
 
