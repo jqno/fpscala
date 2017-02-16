@@ -80,6 +80,18 @@ case class Gen[A](sample: State[RNG, A]) {
 
   // Exercise 8.10: convert Gen to SGen
   def unsized: SGen[A] = SGen(_ => this)
+
+
+
+  def map2[B, C](gen: Gen[B])(f: (A,B) => C): Gen[C] =
+    Gen(State.map2(sample, gen.sample)(f))
+
+  def ** [B](gen: Gen[B]): Gen[(A, B)] =
+    (this map2 gen)((_, _))
+}
+
+object ** {
+  def unapply[A, B](p: (A, B)) = Some(p)
 }
 
 case class Prop(run: (MaxSize, TestCases, RNG) => Result) {
@@ -87,21 +99,23 @@ case class Prop(run: (MaxSize, TestCases, RNG) => Result) {
   // Exercise 8.9: && and ||
   def && (p: Prop): Prop = Prop { (max, n, rng) =>
     run(max, n, rng) match {
-      case Passed => p.run(max, n, rng) match {
+      case f: Falsified => f
+      case a: Result => p.run(max, n, rng) match {
         case Passed => Passed
+        case Proven => a
         case Falsified(f, s) => Falsified(f, s + n)
       }
-      case f: Falsified => f
     }
   }
 
   def || (p: Prop): Prop = Prop { (max, n, rng) =>
     run(max, n, rng) match {
-      case Passed => Passed
       case f: Falsified => p.run(max, n, rng) match {
-        case Passed => Passed
         case Falsified(f2, s2) => Falsified(f2, f.successes + s2)
+        case Passed => Passed
+        case Proven => Proven
       }
+      case a => a
     }
   }
 }
@@ -129,12 +143,31 @@ object Prop {
     prop.run(max, n, rng)
   }
 
+  def check(p: => Boolean): Prop = Prop { (_, _, _) =>
+    if (p) Proven else Falsified("()", 0)
+  }
+
+  def equal[A](p1: Par[A], p2: Par[A]): Par[Boolean] =
+    Par.map2noTimeout(p1, p2)(_ == _)
+
+  private val S = weighted(
+    choose(1, 4).map(Executors.newFixedThreadPool) -> 0.75,
+    unit(Executors.newCachedThreadPool) -> 0.25)
+
+  def forAllPar[A](gen: Gen[A])(f: A => Par[Boolean]): Prop =
+    forAll(S ** gen) { case s ** a => f(a)(s).get }
+
+  def checkPar(p: => Par[Boolean]): Prop =
+    forAllPar(Gen.unit(()))(_ => p)
+
   def run(p: Prop, maxSize: Int = 100, testCases: Int = 100, rng: RNG = SimpleRNG(System.currentTimeMillis)): Unit =
     p.run(maxSize, testCases, rng) match {
       case Falsified(msg, n) =>
         println(s"! Falsified after $n passed tests:\n $msg")
       case Passed =>
         println(s"+ OK, passed $testCases tests.")
+      case Proven =>
+        println(s"+ OK, proven property.")
     }
 
   type MaxSize = Int
@@ -150,6 +183,9 @@ object Prop {
   }
   case class Falsified(failure: FailedCase, successes: SuccessCount) extends Result {
     def isFalsified = true
+  }
+  case object Proven extends Result {
+    def isFalsified = false
   }
 
   def randomStream[A](g: Gen[A])(rng: RNG): Stream[A] =

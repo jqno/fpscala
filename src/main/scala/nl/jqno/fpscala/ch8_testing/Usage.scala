@@ -1,5 +1,6 @@
 package nl.jqno.fpscala.ch8_testing
 
+import nl.jqno.fpscala.ch7_parallelism.Par
 import Prop._
 import SGen._
 
@@ -23,5 +24,14 @@ object Usage extends App {
   }
 
   Prop.run(sortedProp)
+
+
+  val p2 = checkPar {
+    equal(
+      Par.map(Par.unit(1))(_ + 1),
+      Par.unit(2))
+  }
+
+  Prop.run(p2)
 }
 
