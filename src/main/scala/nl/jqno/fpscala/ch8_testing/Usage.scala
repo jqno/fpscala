@@ -33,5 +33,16 @@ object Usage extends App {
   }
 
   Prop.run(p2)
+
+
+  // Exercise 8.17: fork(x) == x
+  val forkProp = forAllPar(smallInt) { n =>
+    equal(
+      Par.fork(Par.unit(n)),
+      Par.unit(n))
+  }
+
+  Prop.run(forkProp)
+  StupidThreadPools.shutdown()
 }
 

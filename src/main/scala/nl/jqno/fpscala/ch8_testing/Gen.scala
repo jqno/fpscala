@@ -6,6 +6,7 @@ import nl.jqno.fpscala.ch7_parallelism._
 import nl.jqno.fpscala.ch7_parallelism.Par.Par
 import Gen._
 import Prop._
+import StupidThreadPools._
 import java.util.concurrent.{Executors,ExecutorService}
 
 /*
@@ -151,8 +152,8 @@ object Prop {
     Par.map2noTimeout(p1, p2)(_ == _)
 
   private val S = weighted(
-    choose(1, 4).map(Executors.newFixedThreadPool) -> 0.75,
-    unit(Executors.newCachedThreadPool) -> 0.25)
+    choose(1, 4).map(n => stupid(Executors.newFixedThreadPool(n))) -> 0.75,
+    unit(stupid(Executors.newCachedThreadPool)) -> 0.25)
 
   def forAllPar[A](gen: Gen[A])(f: A => Par[Boolean]): Prop =
     forAll(S ** gen) { case s ** a => f(a)(s).get }
@@ -221,3 +222,14 @@ object SGen {
     SGen(i => Gen.listOfN(i max 1, g))
 }
 
+object StupidThreadPools {
+  var pools = Set.empty[ExecutorService]
+
+  def stupid(p: ExecutorService): ExecutorService = {
+    pools += p
+    p
+  }
+
+  def shutdown(): Unit =
+    pools.foreach(_.shutdown())
+}
