@@ -4,6 +4,7 @@ import language.higherKinds
 import language.implicitConversions
 import nl.jqno.fpscala.ch8_testing._
 import nl.jqno.fpscala.ch8_testing.Prop._
+import scala.util.matching.Regex
 
 trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trait
 
@@ -24,6 +25,12 @@ trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trai
   def listOfN[A](n: Int, p: Parser[A]): Parser[List[A]] =
     if (n <= 0) succeed(List.empty[A])
     else map2(p, listOfN(n - 1, p))(_ :: _)
+
+
+  // Exercise 9.6: context-sensitive
+  def contextSensitive: Parser[List[Char]] =
+    "[0-9]".r flatMap (n => listOfN(n.toInt, char('a')))
+  implicit def regex(r: Regex): Parser[String]
 
 
   def run[A](p: Parser[A])(input: String): Either[ParseError, A]
