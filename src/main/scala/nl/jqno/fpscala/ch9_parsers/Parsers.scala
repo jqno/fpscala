@@ -2,6 +2,8 @@ package fpinscala.parsing
 
 import language.higherKinds
 import language.implicitConversions
+import nl.jqno.fpscala.ch8_testing._
+import nl.jqno.fpscala.ch8_testing.Prop._
 
 trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trait
 
@@ -33,6 +35,14 @@ trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trai
   }
 
   object Laws {
+    def equal[A](p1: Parser[A], p2: Parser[A])(in: Gen[String]): Prop =
+      forAll(in)(s => run(p1)(s) == run(p2)(s))
+
+    def mapLaw[A](p: Parser[A])(in: Gen[String]): Prop =
+      equal(p, p.map(a => a))(in)
+
+    def succeedLaw[A](a: A)(in: Gen[String]): Prop =
+      forAll(in)(s => run(succeed(a))(s) == Right(a))
   }
 }
 
