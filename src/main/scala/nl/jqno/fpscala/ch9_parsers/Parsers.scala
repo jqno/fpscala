@@ -15,6 +15,10 @@ trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trai
     map2(p, many(p))(_ :: _)
 
 
+  // Exercise 9.3: many in terms of or, map2, succeed
+  def many[A](p: Parser[A]): Parser[List[A]] =
+    map2(p, many(p))(_ :: _) | succeed(List.empty[A])
+
 
 
   def run[A](p: Parser[A])(input: String): Either[ParseError, A]
@@ -28,7 +32,6 @@ trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trai
     ParserOps(f(a))
 
   def listOfN[A](n: Int, p: Parser[A]): Parser[List[A]]
-  def many[A](p: Parser[A]): Parser[List[A]]
   def map[A, B](p: Parser[A])(f: A => B): Parser[B]
   def slice[A](p: Parser[A]): Parser[String]
   def product[A, B](p1: Parser[A], p2: Parser[B]): Parser[(A, B)]
