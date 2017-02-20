@@ -20,6 +20,11 @@ trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trai
     map2(p, many(p))(_ :: _) | succeed(List.empty[A])
 
 
+  // Exercise 9.4: listOfN in terms of map2, succeed
+  def listOfN[A](n: Int, p: Parser[A]): Parser[List[A]] =
+    if (n <= 0) succeed(List.empty[A])
+    else map2(p, listOfN(n - 1, p))(_ :: _)
+
 
   def run[A](p: Parser[A])(input: String): Either[ParseError, A]
   def char(c: Char): Parser[Char] = string(c.toString) map (_.charAt(0))
@@ -31,7 +36,6 @@ trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trai
   implicit def asStringParser[A](a: A)(implicit f: A => Parser[String]): ParserOps[String] =
     ParserOps(f(a))
 
-  def listOfN[A](n: Int, p: Parser[A]): Parser[List[A]]
   def map[A, B](p: Parser[A])(f: A => B): Parser[B]
   def slice[A](p: Parser[A]): Parser[String]
   def product[A, B](p1: Parser[A], p2: Parser[B]): Parser[(A, B)]
