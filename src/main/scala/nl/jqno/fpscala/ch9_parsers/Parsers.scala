@@ -8,7 +8,7 @@ import nl.jqno.fpscala.ch8_testing.Prop._
 trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trait
 
   // Exercise 9.1: map2 and many1
-  def map2[A, B, C](p1: Parser[A], p2: Parser[B])(f: (A, B) => C): Parser[C] =
+  def map2[A, B, C](p1: Parser[A], p2: => Parser[B])(f: (A, B) => C): Parser[C] =
     product(p1, p2) map f.tupled
 
   def many1[A](p: Parser[A]): Parser[List[A]] =
@@ -30,7 +30,7 @@ trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trai
   def char(c: Char): Parser[Char] = string(c.toString) map (_.charAt(0))
   def succeed[A](a: A): Parser[A] = string("") map (_ => a)
 
-  def or[A](s1: Parser[A], s2: Parser[A]): Parser[A]
+  def or[A](s1: Parser[A], s2: => Parser[A]): Parser[A]
   implicit def string(s: String): Parser[String]
   implicit def operators[A](p: Parser[A]): ParserOps[A] = ParserOps[A](p)
   implicit def asStringParser[A](a: A)(implicit f: A => Parser[String]): ParserOps[String] =
@@ -38,7 +38,7 @@ trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trai
 
   def map[A, B](p: Parser[A])(f: A => B): Parser[B]
   def slice[A](p: Parser[A]): Parser[String]
-  def product[A, B](p1: Parser[A], p2: Parser[B]): Parser[(A, B)]
+  def product[A, B](p1: Parser[A], p2: => Parser[B]): Parser[(A, B)]
 
 
   case class ParserOps[A](p: Parser[A]) {
