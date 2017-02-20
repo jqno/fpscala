@@ -52,6 +52,14 @@ trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trai
 
     def succeedLaw[A](a: A)(in: Gen[String]): Prop =
       forAll(in)(s => run(succeed(a))(s) == Right(a))
+
+
+    // Exercise 9.2: laws for product
+    // There are some problems with this one. But I was close!
+    // See https://github.com/fpinscala/fpinscala/blob/master/answerkey/parsing/02.answer.scala
+    def productLaw[A, B, C](p1: Parser[A], p2: Parser[B], p3: Parser[B])(in: Gen[String]): Prop =
+      equal(p1 ** (p2 ** p3), (p1 ** p2) ** p3)(in) &&
+      equal((p1 ** p2) map (t => t), (p1 map (a => a)) ** (p2 map (b => b)))(in)
   }
 }
 
