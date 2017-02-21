@@ -35,16 +35,10 @@ trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trai
 
   // Exercise 9.7: product and map2 in terms of flatMap
   def product[A, B](p1: Parser[A], p2: => Parser[B]): Parser[(A, B)] =
-    for {
-      a <- p1
-      b <- p2
-    } yield (a, b)
+    p1.flatMap(a => p2.flatMap(b => succeed((a, b))))
 
   def map2[A, B, C](p1: Parser[A], p2: => Parser[B])(f: (A, B) => C): Parser[C] =
-    for {
-      a <- p1
-      b <- p2
-    } yield f(a, b)
+    p1.flatMap(a => p2.flatMap(b => succeed(f(a, b))))
 
 
 
