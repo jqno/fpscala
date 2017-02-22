@@ -1,4 +1,4 @@
-package fpinscala.parsing
+package nl.jqno.fpscala.ch9_parsers
 
 import language.higherKinds
 import language.implicitConversions
@@ -6,7 +6,7 @@ import nl.jqno.fpscala.ch8_testing._
 import nl.jqno.fpscala.ch8_testing.Prop._
 import scala.util.matching.Regex
 
-trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trait
+trait Parsers[Err, Parser[+_]] { self => // so inner classes may call methods of trait
 
   // Exercise 9.1: map2 and many1
   // def map2[A, B, C](p1: Parser[A], p2: => Parser[B])(f: (A, B) => C): Parser[C] =
@@ -67,6 +67,7 @@ trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trai
     def map[B](f: A => B): Parser[B] = self.map(p)(f)
     def ** [B](p2: => Parser[B]): Parser[(A, B)] = self.product(p, p2)
     def product[B](p2: => Parser[B]): Parser[(A, B)] = self.product(p, p2)
+    def slice: Parser[String] = self.slice(p)
     def flatMap[B](f: A => Parser[B]): Parser[B] = self.flatMap(p)(f)
   }
 
