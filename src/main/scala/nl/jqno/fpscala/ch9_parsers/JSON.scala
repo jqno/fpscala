@@ -29,44 +29,56 @@ object JSON {
       } yield JString(s)
     val jbool: Parser[JBool] =
       regex("true|false".r) map (b => if (b == "true") JBool(true) else JBool(false))
-    lazy val innerJarray: Parser[JArray] = // incorrect: still allows trailing comma's. But I don't care yet ;)
+
+    val jarrayEmpty: Parser[JArray] =
+      succeed(JArray(IndexedSeq.empty[JSON]))
+    val jarrayBase: Parser[JArray] =
+      for {
+        e <- jsonParser(P)
+      } yield JArray(IndexedSeq(e))
+    lazy val jarrayInduction: Parser[JArray] =
       (for {
-        j <- jsonParser(P)
-        _ <- comma
-        js <- innerJarray
-      } yield JArray(js.get :+ j)) | succeed(JArray(IndexedSeq.empty[JSON]))
+        es <- jarrayInduction
+        _ <- spaces
+        _ <- char(',')
+        _ <- spaces
+        e <- jarrayBase
+      } yield JArray(es.get :+ e)) | jarrayBase
     val jarray: Parser[JArray] =
       for {
         _ <- char('[')
         _ <- spaces
-        a <- innerJarray
+        as <- jarrayInduction | jarrayEmpty
         _ <- spaces
         _ <- char(']')
-      } yield a
-    val entryJobject: Parser[(String, JSON)] =
+      } yield as
+
+    val jobjectEmpty: Parser[JObject] =
+      succeed(JObject(Map.empty))
+    val jobjectBase: Parser[JObject] =
       for {
         k <- jstring
         _ <- spaces
         _ <- char('=')
         _ <- spaces
         v <- jsonParser(P)
-      } yield (k.get, v)
-    lazy val entriesJobject: Parser[JObject] =
+      } yield JObject(Map(k.get -> v))
+    lazy val jobjectInduction: Parser[JObject] =
       (for {
         _ <- spaces
-        e <- entryJobject
+        e <- jobjectBase
         _ <- spaces
         _ <- char(',')
-        es <- entriesJobject
-      } yield JObject(es.get + e)) | succeed(JObject(Map.empty))
+        es <- jobjectInduction
+      } yield JObject(es.get ++ e.get)) | succeed(JObject(Map.empty))
     val jobject: Parser[JObject] =
       for {
         _ <- char('{')
-        es <- entriesJobject
+        _ <- spaces
+        es <- jobjectInduction | jobjectEmpty
         _ <- spaces
         _ <- char('}')
       } yield es
-
 
     jobject
   }
