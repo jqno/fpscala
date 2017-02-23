@@ -59,7 +59,7 @@ object JSON {
       for {
         k <- jstring
         _ <- spaces
-        _ <- char('=')
+        _ <- char(':')
         _ <- spaces
         v <- jsonParser(P)
       } yield JObject(Map(k.get -> v))
