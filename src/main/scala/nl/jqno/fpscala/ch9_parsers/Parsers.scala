@@ -6,7 +6,7 @@ import nl.jqno.fpscala.ch8_testing._
 import nl.jqno.fpscala.ch8_testing.Prop._
 import scala.util.matching.Regex
 
-trait Parsers[Err, Parser[+_]] { self => // so inner classes may call methods of trait
+trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trait
 
   // Exercise 9.1: map2 and many1
   // def map2[A, B, C](p1: Parser[A], p2: => Parser[B])(f: (A, B) => C): Parser[C] =
@@ -58,6 +58,12 @@ trait Parsers[Err, Parser[+_]] { self => // so inner classes may call methods of
 
   def slice[A](p: Parser[A]): Parser[String]
   def flatMap[A, B](p: Parser[A])(f: A => Parser[B]): Parser[B]
+
+  def label[A](msg: String)(p: Parser[A]): Parser[A]
+  def scope[A](msg: String)(p: Parser[A]): Parser[A]
+  def attempt[A](p: Parser[A]): Parser[A]
+  def errorLocation(e: ParseError): Location
+  def errorMessage(e: ParseError): String
 
 
   case class ParserOps[A](p: Parser[A]) {

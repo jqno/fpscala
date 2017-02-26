@@ -12,7 +12,7 @@ object JSON {
   case class JObject(get: Map[String, JSON]) extends JSON
 
 
-  def jsonParser[Err, Parser[+_]](P: Parsers[Err, Parser]): Parser[JSON] = {
+  def jsonParser[Parser[+_]](P: Parsers[Parser]): Parser[JSON] = {
     import P._
     val spaces = char(' ').many.slice
     val comma = (spaces ** char(',') ** spaces) map (t => t._1._1 + t._1._2 + t._2)
