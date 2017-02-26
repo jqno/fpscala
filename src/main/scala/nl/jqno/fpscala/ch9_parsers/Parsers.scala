@@ -46,7 +46,7 @@ trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trai
     p.flatMap(a => succeed(f(a)))
 
 
-  def run[A](p: Parser[A])(input: String): Either[ParseError, A]
+  def run[A](p: Parser[A])(input: String): Either[ParseError, A] = ???
   def char(c: Char): Parser[Char] = string(c.toString) map (_.charAt(0))
   def succeed[A](a: A): Parser[A] = string("") map (_ => a)
 
@@ -62,8 +62,8 @@ trait Parsers[Parser[+_]] { self => // so inner classes may call methods of trai
   def label[A](msg: String)(p: Parser[A]): Parser[A]
   def scope[A](msg: String)(p: Parser[A]): Parser[A]
   def attempt[A](p: Parser[A]): Parser[A]
-  def errorLocation(e: ParseError): Location
-  def errorMessage(e: ParseError): String
+  def errorLocation(e: ParseError): Location = ???
+  def errorMessage(e: ParseError): String = ???
 
 
   case class ParserOps[A](p: Parser[A]) {
