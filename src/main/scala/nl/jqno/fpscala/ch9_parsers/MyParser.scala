@@ -22,3 +22,19 @@ trait Result[+A]
 case class Success[+A](get: A, charsConsumed: Int) extends Result[A]
 case class Failure(get: ParseError) extends Result[Nothing]
 
+
+// Exercise 9.13: Yeah, I think I'm just going to stop here. I've already
+// skipped many of the previous exercises because I don't enjoy the vagueness
+// of big, open-ended design exercises at this point.
+//
+// Also, the answerKey stopped being helpful a few exercises ago, and the fully
+// implemented answer has diverged from this point in the book to be really
+// helpful anymore, either. The answerKey even suggest that I read on instead
+// of look at the reference implementation, so I'll just do that, and maybe
+// come back to these exercises when I've read the rest of the chapter. Or
+// book.
+//
+// Bad excuses, I guess, but I'm doing this book for fun so I should be having
+// fun instead of being frustrated by the answerKey, right? Anyway, I have high
+// hopes for the next chapters.
+
