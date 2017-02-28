@@ -64,6 +64,7 @@ object Monoids {
 object MonoidLaws extends App {
   import nl.jqno.fpscala.ch8_testing._
   import Prop._
+  import Monoids._
 
   // Exercise 10.4: property-based testing
   def monoidLaws[A](m: Monoid[A], gen: Gen[A]): Prop ={
@@ -80,10 +81,22 @@ object MonoidLaws extends App {
     identityLaw && associativityLaw
   }
 
-  def associativityLaw[A] = forAll(monoidGenerator) { case (m, a) =>
-    m.op(m.op(a, a), a) == m.op(a, m.op(a, a))
-  }
 
-  Prop.run(identityLaw)
-  Prop.run(associativityLaw)
+  def ints = Gen.choose(-10, 10)
+  def positiveInts = Gen.choose(0, 20)
+  def strings = positiveInts.flatMap(n => Gen.listOfN(n, Gen.choose(0,127)).map(_.map(_.toChar).mkString))
+  def optionsOf[A](g: Gen[A]) = Gen.weighted[Option[A]](
+    (Gen.unit(None), 0.2),
+    (g.map(a => Some(a)), 0.8))
+  
+  run(monoidLaws(stringMonoid, strings))
+  run(monoidLaws[List[Int]](listMonoid, ints.listOfN(positiveInts)))
+  run(monoidLaws(intAddition, ints))
+  run(monoidLaws(intMultiplication, ints))
+  run(monoidLaws(booleanOr, Gen.boolean))
+  run(monoidLaws(booleanAnd, Gen.boolean))
+  run(monoidLaws[Option[Int]](optionMonoid, optionsOf(ints)))
+  run(monoidLaws[Option[Int]](dualOptionMonoid, optionsOf(ints)))
+  // testing the endomonoids would be kind of annoying with the current test framework, so I'm skipping them.
 }
+
