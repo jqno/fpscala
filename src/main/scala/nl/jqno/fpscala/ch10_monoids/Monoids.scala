@@ -66,9 +66,18 @@ object MonoidLaws extends App {
   import Prop._
 
   // Exercise 10.4: property-based testing
-  def monoidGenerator[A]: Gen[(Monoid[A], A)] = ???
-  def identityLaw[A] = forAll(monoidGenerator) { case (m, a) =>
-    m.op(m.zero, a) == m.op(a, m.zero)
+  def monoidLaws[A](m: Monoid[A], gen: Gen[A]): Prop ={
+    val identityLaw = forAll(gen) { a =>
+      m.op(m.zero, a) == m.op(a, m.zero)
+    }
+    val associativityLaw = forAll(for {
+      x <- gen
+      y <- gen
+      z <- gen
+    } yield (x, y, z)) { case (x, y, z) =>
+      m.op(m.op(x, y), z) == m.op(x, m.op(y, z))
+    }
+    identityLaw && associativityLaw
   }
 
   def associativityLaw[A] = forAll(monoidGenerator) { case (m, a) =>
