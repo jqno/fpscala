@@ -37,4 +37,11 @@ object Monoids extends App {
     def op(a1: Boolean, a2: Boolean) = a1 && a2
     val zero = true
   }
+
+
+  // Exercise 10.2: a monoid for Options
+  def optionMonoid[A] = new Monoid[Option[A]] {
+    def op(a1: Option[A], a2: Option[A]) = a1 orElse a2
+    val zero = None
+  }
 }
