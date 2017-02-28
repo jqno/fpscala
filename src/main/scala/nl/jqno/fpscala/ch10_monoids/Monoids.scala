@@ -5,7 +5,7 @@ trait Monoid[A] {
   def zero: A
 }
 
-object Monoids extends App {
+object Monoids {
   val stringMonoid = new Monoid[String] {
     def op(a1: String, a2: String) = a1 + a2
     val zero = ""
@@ -59,4 +59,22 @@ object Monoids extends App {
     def op(a1: A => A, a2: A => A): A => A = a2 andThen a1
     val zero = (a: A) => a
   }
+}
+
+object MonoidLaws extends App {
+  import nl.jqno.fpscala.ch8_testing._
+  import Prop._
+
+  // Exercise 10.4: property-based testing
+  def monoidGenerator[A]: Gen[(Monoid[A], A)] = ???
+  def identityLaw[A] = forAll(monoidGenerator) { case (m, a) =>
+    m.op(m.zero, a) == m.op(a, m.zero)
+  }
+
+  def associativityLaw[A] = forAll(monoidGenerator) { case (m, a) =>
+    m.op(m.op(a, a), a) == m.op(a, m.op(a, a))
+  }
+
+  Prop.run(identityLaw)
+  Prop.run(associativityLaw)
 }
