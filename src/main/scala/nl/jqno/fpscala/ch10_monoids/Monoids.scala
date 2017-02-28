@@ -48,4 +48,15 @@ object Monoids extends App {
     def op(a1: Option[A], a2: Option[A]) = a2 orElse a1
     val zero = None
   }
+
+
+  // Exercise 10.3: endoMonoid
+  def endoMonoid[A] = new Monoid[A => A] {
+    def op(a1: A => A, a2: A => A): A => A = a1 andThen a2
+    val zero = (a: A) => a
+  }
+  def dualEndoMonoid[A] = new Monoid[A => A] {
+    def op(a1: A => A, a2: A => A): A => A = a2 andThen a1
+    val zero = (a: A) => a
+  }
 }
