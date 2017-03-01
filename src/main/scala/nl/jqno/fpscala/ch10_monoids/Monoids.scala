@@ -87,8 +87,18 @@ object Monoids {
 
 
   // Exercise 10.8: parFoldMap
-  def par[A](m: Monoid[A]): Monoid[Par[A]] = ???
-  def parFoldMap[A, B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): Par[B] = ???
+  def par[A](m: Monoid[A]): Monoid[Par[A]] = new Monoid[Par[A]] {
+    def op(a1: Par[A], a2: Par[A]) = Par.map2noTimeout(a1, a2)(m.op)
+    val zero = Par.unit(m.zero)
+  }
+  def parFoldMap[A, B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): Par[B] = as.size match {
+    case 0 => par(m).zero
+    case 1 => Par.unit(f(as(0)))
+    case _ =>
+      val mid = as.length / 2
+      val (bs, cs) = as.splitAt(mid)
+      par(m).op(parFoldMap(bs, m)(f), parFoldMap(cs, m)(f))
+  }
 }
 
 object MonoidLaws extends App {
