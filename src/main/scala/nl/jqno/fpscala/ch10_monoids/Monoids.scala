@@ -99,6 +99,10 @@ object Monoids {
       val (bs, cs) = as.splitAt(mid)
       par(m).op(parFoldMap(bs, m)(f), parFoldMap(cs, m)(f))
   }
+
+
+  // Exercise 10.9: isSorted
+  def isSorted(as: IndexedSeq[Int]): Boolean = true
 }
 
 object MonoidLaws extends App {

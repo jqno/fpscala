@@ -47,6 +47,20 @@ class MonoidsTest extends FlatSpec with Matchers {
   }
 
 
+  // Exercise 10.9: isSorted
+  behavior of "isSorted"
+
+  it should "return true if a list is sorted" in {
+    val as = IndexedSeq(1, 2, 3, 4)
+    isSorted(as) should be (true)
+  }
+
+  it should "return false if a list is unsorted" in {
+    val as = IndexedSeq(1, 5, 3, 4)
+    isSorted(as) should be (false)
+  }
+
+
   private val pool = java.util.concurrent.Executors.newFixedThreadPool(2)
   private def get[A](p: Par[A]): A =
     Par.run(pool)(p).get
