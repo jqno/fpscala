@@ -64,6 +64,12 @@ object Monoids {
   // Exercise 10.5: foldMap
   def foldMap[A, B](as: List[A], m: Monoid[B])(f: A => B): B =
     as.foldLeft(m.zero)((b, a) => m.op(b, f(a)))
+
+
+  // Exercise 10.6: foldRight in terms of foldMap
+  // Oops: I peeked
+  def foldRight1[A, B](as: List[A])(z: B)(f: (A, B) => B): B =
+    foldMap(as, endoMonoid[B])(f.curried)(z)
 }
 
 object MonoidLaws extends App {
