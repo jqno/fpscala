@@ -102,20 +102,18 @@ object Monoids {
 
 
   // Exercise 10.9: isSorted
-  def isSorted(as: IndexedSeq[Int]): Boolean = {
-    val m = new Monoid[(Int, Boolean)] {
-      def op(a1: (Int, Boolean), a2: (Int, Boolean)) = a1 match {
-        case (n, false) =>
-          (n, false)
-        case (n1, _) =>
-          val n2 = a2._1
-          if (n1 <= n2) (n2, true) else (n1, false)
-      }
-      val zero = (Integer.MIN_VALUE, true)
+  val sortedMonoid = new Monoid[(Int, Boolean)] {
+    def op(a1: (Int, Boolean), a2: (Int, Boolean)) = a1 match {
+      case (n, false) =>
+        (n, false)
+      case (n1, _) =>
+        val n2 = a2._1
+        if (n1 <= n2) (n2, true) else (n1, false)
     }
-    val f = (i: Int) => (i, true)
-    foldMap(as, m)(f)._2
+    val zero = (Integer.MIN_VALUE, true)
   }
+  def isSorted(as: IndexedSeq[Int]): Boolean =
+    foldMap(as, sortedMonoid)(i => (i, true))._2
 }
 
 object MonoidLaws extends App {
@@ -145,6 +143,10 @@ object MonoidLaws extends App {
   def optionsOf[A](g: Gen[A]) = Gen.weighted[Option[A]](
     (Gen.unit(None), 0.2),
     (g.map(a => Some(a)), 0.8))
+  def intBoolTuples = for {
+    i <- ints
+    b <- Gen.boolean
+  } yield (i, b)
   
   run(monoidLaws(stringMonoid, strings))
   run(monoidLaws[List[Int]](listMonoid, ints.listOfN(positiveInts)))
@@ -155,5 +157,6 @@ object MonoidLaws extends App {
   run(monoidLaws[Option[Int]](optionMonoid, optionsOf(ints)))
   run(monoidLaws[Option[Int]](dualOptionMonoid, optionsOf(ints)))
   // testing the endomonoids would be kind of annoying with the current test framework, so I'm skipping them.
+  run(monoidLaws(sortedMonoid, intBoolTuples))
 }
 
