@@ -103,14 +103,12 @@ object Monoids {
 
   // Exercise 10.9: isSorted
   val sortedMonoid = new Monoid[(Int, Boolean)] {
-    def op(a1: (Int, Boolean), a2: (Int, Boolean)) = a1 match {
-      case (n, false) =>
-        (n, false)
-      case (n1, _) =>
-        val n2 = a2._1
-        if (n1 <= n2) (n2, true) else (n1, false)
+    def op(a1: (Int, Boolean), a2: (Int, Boolean)) = {
+      val (n1, b1) = a1
+      val (n2, b2) = a2
+      (n1 max n2, b1 && b2 && n1 <= n2)
     }
-    val zero = (Integer.MIN_VALUE, true)
+    val zero = (Integer.MIN_VALUE, false)
   }
   def isSorted(as: IndexedSeq[Int]): Boolean =
     foldMap(as, sortedMonoid)(i => (i, true))._2
