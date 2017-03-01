@@ -102,7 +102,20 @@ object Monoids {
 
 
   // Exercise 10.9: isSorted
-  def isSorted(as: IndexedSeq[Int]): Boolean = true
+  def isSorted(as: IndexedSeq[Int]): Boolean = {
+    val m = new Monoid[(Int, Boolean)] {
+      def op(a1: (Int, Boolean), a2: (Int, Boolean)) = a1 match {
+        case (n, false) =>
+          (n, false)
+        case (n1, _) =>
+          val n2 = a2._1
+          if (n1 <= n2) (n2, true) else (n1, false)
+      }
+      val zero = (Integer.MIN_VALUE, true)
+    }
+    val f = (i: Int) => (i, true)
+    foldMap(as, m)(f)._2
+  }
 }
 
 object MonoidLaws extends App {
