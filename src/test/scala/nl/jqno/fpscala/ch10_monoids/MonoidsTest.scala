@@ -20,5 +20,19 @@ class MonoidsTest extends FlatSpec with Matchers {
     val as = List("1", "2", "3", "4")
     foldRight1(as)(0)((a, b) => a.toInt + b) should be (10)
   }
+
+
+  // Exercise 10.7: balanced foldMap
+  behavior of "balanced foldMap"
+
+  it should "map the values of a list of even size and fold over the results" in {
+    val as = IndexedSeq("1", "2", "3", "4")
+    foldMap(as, intAddition)(_.toInt) should be (10)
+  }
+
+  it should "map the values of a list of odd size and fold over the results" in {
+    val as = IndexedSeq("1", "2", "3", "4", "5")
+    foldMap(as, intAddition)(_.toInt) should be (15)
+  }
 }
 

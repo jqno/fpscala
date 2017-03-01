@@ -70,6 +70,17 @@ object Monoids {
   // Oops: I peeked
   def foldRight1[A, B](as: List[A])(z: B)(f: (A, B) => B): B =
     foldMap(as, endoMonoid[B])(f.curried)(z)
+
+
+  // Exercise 10.7: balanced foldMap
+  def foldMap[A, B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): B = as.size match {
+    case 0 => m.zero
+    case 1 => f(as(0))
+    case _ =>
+      val mid = as.length / 2
+      val (bs, cs) = as.splitAt(mid)
+      m.op(foldMap(bs, m)(f), foldMap(cs, m)(f))
+  }
 }
 
 object MonoidLaws extends App {
