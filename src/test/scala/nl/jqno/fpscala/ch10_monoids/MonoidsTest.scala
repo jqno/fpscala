@@ -1,6 +1,8 @@
 package nl.jqno.fpscala.ch10_monoids
 
 import org.scalatest.{FlatSpec, Matchers}
+import nl.jqno.fpscala.ch7_parallelism.Par
+import nl.jqno.fpscala.ch7_parallelism.Par._
 import Monoids._
 
 class MonoidsTest extends FlatSpec with Matchers {
@@ -34,5 +36,19 @@ class MonoidsTest extends FlatSpec with Matchers {
     val as = IndexedSeq("1", "2", "3", "4", "5")
     foldMap(as, intAddition)(_.toInt) should be (15)
   }
+
+
+  // Exercise 10.8: parFoldMap
+  behavior of "parFoldMap"
+
+  it should "map the values of a list and fold over the results" in {
+    val as = IndexedSeq("1", "2", "3", "4")
+    get(parFoldMap(as, intAddition)(_.toInt)) should be (10)
+  }
+
+
+  private val pool = java.util.concurrent.Executors.newFixedThreadPool(2)
+  private def get[A](p: Par[A]): A =
+    Par.run(pool)(p).get
 }
 

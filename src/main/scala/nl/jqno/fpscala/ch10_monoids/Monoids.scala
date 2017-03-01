@@ -1,5 +1,8 @@
 package nl.jqno.fpscala.ch10_monoids
 
+import nl.jqno.fpscala.ch7_parallelism.Par
+import nl.jqno.fpscala.ch7_parallelism.Par._
+
 trait Monoid[A] {
   def op(a1: A, a2: A): A
   def zero: A
@@ -81,6 +84,11 @@ object Monoids {
       val (bs, cs) = as.splitAt(mid)
       m.op(foldMap(bs, m)(f), foldMap(cs, m)(f))
   }
+
+
+  // Exercise 10.8: parFoldMap
+  def par[A](m: Monoid[A]): Monoid[Par[A]] = ???
+  def parFoldMap[A, B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): Par[B] = ???
 }
 
 object MonoidLaws extends App {
