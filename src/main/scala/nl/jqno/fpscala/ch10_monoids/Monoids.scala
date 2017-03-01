@@ -102,16 +102,16 @@ object Monoids {
 
 
   // Exercise 10.9: isSorted
-  val sortedMonoid = new Monoid[(Int, Boolean)] {
-    def op(a1: (Int, Boolean), a2: (Int, Boolean)) = {
-      val (n1, b1) = a1
-      val (n2, b2) = a2
-      (n1 max n2, b1 && b2 && n1 <= n2)
+  val sortedMonoid = new Monoid[(Int, Int, Boolean)] {
+    def op(a1: (Int, Int, Boolean), a2: (Int, Int, Boolean)) = {
+      val (min1, max1, b1) = a1
+      val (min2, max2, b2) = a2
+      (min1 min min2, max1 max max2, b1 && b2 && min1 <= min2 && max1 <= max2)
     }
-    val zero = (Integer.MIN_VALUE, false)
+    val zero = (Integer.MIN_VALUE, Integer.MAX_VALUE, false)
   }
   def isSorted(as: IndexedSeq[Int]): Boolean =
-    foldMap(as, sortedMonoid)(i => (i, true))._2
+    foldMap(as, sortedMonoid)(i => (i, i, true))._3
 }
 
 object MonoidLaws extends App {
@@ -144,7 +144,7 @@ object MonoidLaws extends App {
   def intBoolTuples = for {
     i <- ints
     b <- Gen.boolean
-  } yield (i, b)
+  } yield (i, i, b)
   
   run(monoidLaws(stringMonoid, strings))
   run(monoidLaws[List[Int]](listMonoid, ints.listOfN(positiveInts)))
