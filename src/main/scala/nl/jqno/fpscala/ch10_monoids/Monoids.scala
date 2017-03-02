@@ -134,10 +134,11 @@ object Monoids {
 
   // Exercise 10.11: wordcount
   val wcf = (c: Char) => if (" ,.()" contains c) Part("", 0, "") else Stub(c.toString)
+  val unstub = (s: String) => s.length min 1
   def wordcount(sentence: String): Int =
     foldMap(sentence, wcMonoid)(wcf) match {
-      case Stub(_) => 1
-      case Part(_, words, _) => words
+      case Stub(s) => unstub(s)
+      case Part(l, words, r) => unstub(l) + words + unstub(r)
     }
 }
 
