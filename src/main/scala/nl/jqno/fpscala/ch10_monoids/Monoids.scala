@@ -127,7 +127,7 @@ object Monoids {
       case (Part(ls1, w1, rs1), Stub(s2)) =>
         Part(ls1, w1, rs1 + s2)
       case (Part(ls1, w1, rs1), Part(ls2, w2, rs2)) =>
-        Part(ls1, w1 + w2 + 1, rs2)
+        Part(ls1, w1 + w2 + (if ((rs1 + ls2).isEmpty) 0 else 1), rs2)
     }
     val zero = Stub("")
   }
