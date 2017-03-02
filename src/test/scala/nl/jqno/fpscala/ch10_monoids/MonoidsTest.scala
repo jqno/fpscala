@@ -61,6 +61,14 @@ class MonoidsTest extends FlatSpec with Matchers {
   }
 
 
+  // Exercise 10.11: wordcount
+  behavior of "wordcount"
+
+  it should "count the words in a string" in {
+    wordcount("lorem ipsum dolor sit amet, ") should be (5)
+  }
+
+
   private val pool = java.util.concurrent.Executors.newFixedThreadPool(2)
   private def get[A](p: Par[A]): A =
     Par.run(pool)(p).get
