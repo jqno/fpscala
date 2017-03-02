@@ -154,42 +154,21 @@ trait Foldable[F[_]] {
 
 // Exercise 10.12: Foldables for List, IndexedSeq, Stream
 object FoldableList extends Foldable[List] {
-  def foldRight[A, B](as: List[A])(z: B)(f: (A, B) => B): B = as match {
-    case Nil => z
-    case x :: xs => f(x, foldRight(xs)(z)(f))
-  }
-  def foldLeft[A, B](as: List[A])(z: B)(f: (B, A) => B): B = as match {
-    case Nil => z
-    case x :: xs => foldLeft(xs)(f(z, x))(f)
-  }
-  def foldMap[A, B](as: List[A])(f: A => B)(mb: Monoid[B]): B =
-    foldLeft(as)(mb.zero)((b, a) => mb.op(b, f(a)))
+  def foldRight[A, B](as: List[A])(z: B)(f: (A, B) => B): B = as.foldRight(z)(f)
+  def foldLeft[A, B](as: List[A])(z: B)(f: (B, A) => B): B = as.foldLeft(z)(f)
+  def foldMap[A, B](as: List[A])(f: A => B)(mb: Monoid[B]): B = as.foldLeft(mb.zero)((b, a) => mb.op(b, f(a)))
 }
 
 object FoldableIndexedSeq extends Foldable[IndexedSeq] {
-  def foldRight[A, B](as: IndexedSeq[A])(z: B)(f: (A, B) => B): B = as match {
-    case IndexedSeq() => z
-    case x +: xs => f(x, foldRight(xs)(z)(f))
-  }
-  def foldLeft[A, B](as: IndexedSeq[A])(z: B)(f: (B, A) => B): B = as match {
-    case IndexedSeq() => z
-    case x +: xs => foldLeft(xs)(f(z, x))(f)
-  }
-  def foldMap[A, B](as: IndexedSeq[A])(f: A => B)(mb: Monoid[B]): B =
-    foldLeft(as)(mb.zero)((b, a) => mb.op(b, f(a)))
+  def foldRight[A, B](as: IndexedSeq[A])(z: B)(f: (A, B) => B): B = as.foldRight(z)(f)
+  def foldLeft[A, B](as: IndexedSeq[A])(z: B)(f: (B, A) => B): B = as.foldLeft(z)(f)
+  def foldMap[A, B](as: IndexedSeq[A])(f: A => B)(mb: Monoid[B]): B = as.foldLeft(mb.zero)((b, a) => mb.op(b, f(a)))
 }
 
 object FoldableStream extends Foldable[Stream] {
-  def foldRight[A, B](as: Stream[A])(z: B)(f: (A, B) => B): B = as match {
-    case Stream.Empty => z
-    case x #:: xs => f(x, foldRight(xs)(z)(f))
-  }
-  def foldLeft[A, B](as: Stream[A])(z: B)(f: (B, A) => B): B = as match {
-    case Stream.Empty => z
-    case x #:: xs => foldLeft(xs)(f(z, x))(f)
-  }
-  def foldMap[A, B](as: Stream[A])(f: A => B)(mb: Monoid[B]): B =
-    foldLeft(as)(mb.zero)((b, a) => mb.op(b, f(a)))
+  def foldRight[A, B](as: Stream[A])(z: B)(f: (A, B) => B): B = as.foldRight(z)(f)
+  def foldLeft[A, B](as: Stream[A])(z: B)(f: (B, A) => B): B = as.foldLeft(z)(f)
+  def foldMap[A, B](as: Stream[A])(f: A => B)(mb: Monoid[B]): B = as.foldLeft(mb.zero)((b, a) => mb.op(b, f(a)))
 }
 
 
