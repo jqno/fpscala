@@ -112,6 +112,25 @@ object Monoids {
   }
   def isSorted(as: IndexedSeq[Int]): Boolean =
     foldMap(as, sortedMonoid)(i => (i, i, true))._3
+
+
+  // Exercise: 10.10: wordcount monoid
+  sealed trait WC
+  case class Stub(chars: String) extends WC
+  case class Part(lStub: String, words: Int, rStub: String) extends WC
+  val wcMonoid = new Monoid[WC] {
+    def op(a1: WC, a2: WC) = (a1, a2) match {
+      case (Stub(s1), Stub(s2)) =>
+        Stub(s1 + s2)
+      case (Stub(s1), Part(ls2, w2, rs2)) =>
+        Part(s1 + ls2, w2, rs2)
+      case (Part(ls1, w1, rs1), Stub(s2)) =>
+        Part(ls1, w1, rs1 + s2)
+      case (Part(ls1, w1, rs1), Part(ls2, w2, rs2)) =>
+        Part(ls1, w1 + w2 + 1, rs2)
+    }
+    val zero = Stub("")
+  }
 }
 
 object MonoidLaws extends App {
@@ -145,6 +164,13 @@ object MonoidLaws extends App {
     i <- ints
     b <- Gen.boolean
   } yield (i, i, b)
+  def stubs: Gen[WC] = strings.map(Stub.apply)
+  def parts: Gen[WC] = for {
+    lStub <- strings
+    words <- Gen.choose(0, 10)
+    rStub <- strings
+  } yield Part(lStub, words, rStub)
+  def toilets = Gen.weighted[WC]((stubs, 0.5), (parts, 0.5))
   
   run(monoidLaws(stringMonoid, strings))
   run(monoidLaws[List[Int]](listMonoid, ints.listOfN(positiveInts)))
@@ -156,5 +182,6 @@ object MonoidLaws extends App {
   run(monoidLaws[Option[Int]](dualOptionMonoid, optionsOf(ints)))
   // testing the endomonoids would be kind of annoying with the current test framework, so I'm skipping them.
   run(monoidLaws(sortedMonoid, intBoolTuples))
+  run(monoidLaws(wcMonoid, toilets))
 }
 
