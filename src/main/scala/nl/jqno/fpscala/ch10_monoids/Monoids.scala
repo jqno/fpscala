@@ -1,6 +1,7 @@
 package nl.jqno.fpscala.ch10_monoids
 
 import scala.language.higherKinds
+import nl.jqno.fpscala.ch3_functional_data_structures.{Tree, Leaf, Branch}
 import nl.jqno.fpscala.ch7_parallelism.Par
 import nl.jqno.fpscala.ch7_parallelism.Par._
 
@@ -152,7 +153,7 @@ trait Foldable[F[_]] {
 }
 
 
-// Exercise 10.12: Foldables for List, IndexedSeq, Stream
+// Exercise 10.12: foldables for List, IndexedSeq, Stream
 object FoldableList extends Foldable[List] {
   def foldRight[A, B](as: List[A])(z: B)(f: (A, B) => B): B = as.foldRight(z)(f)
   def foldLeft[A, B](as: List[A])(z: B)(f: (B, A) => B): B = as.foldLeft(z)(f)
@@ -169,6 +170,23 @@ object FoldableStream extends Foldable[Stream] {
   def foldRight[A, B](as: Stream[A])(z: B)(f: (A, B) => B): B = as.foldRight(z)(f)
   def foldLeft[A, B](as: Stream[A])(z: B)(f: (B, A) => B): B = as.foldLeft(z)(f)
   def foldMap[A, B](as: Stream[A])(f: A => B)(mb: Monoid[B]): B = as.foldLeft(mb.zero)((b, a) => mb.op(b, f(a)))
+}
+
+
+// Exercise 10.13: foldable Tree
+object FoldableTree extends Foldable[Tree] {
+  def foldRight[A, B](as: Tree[A])(z: B)(f: (A, B) => B): B = as match {
+    case Leaf(x) => f(x, z)
+    case Branch(a, b) => foldRight(a)(foldRight(b)(z)(f))(f)
+  }
+  def foldLeft[A, B](as: Tree[A])(z: B)(f: (B, A) => B): B = as match {
+    case Leaf(x) => f(z, x)
+    case Branch(a, b) => foldLeft(b)(foldLeft(a)(z)(f))(f)
+  }
+  def foldMap[A, B](as: Tree[A])(f: A => B)(mb: Monoid[B]): B = as match {
+    case Leaf(x) => f(x)
+    case Branch(a, b) => mb.op(foldMap(a)(f)(mb), foldMap(b)(f)(mb))
+  }
 }
 
 
