@@ -142,6 +142,13 @@ object Monoids {
       case Stub(s) => unstub(s)
       case Part(l, words, r) => unstub(l) + words + unstub(r)
     }
+
+
+  // Exercise 10.16: a product of monoids is also a monoid
+  def productMonoid[A, B](ma: Monoid[A], mb: Monoid[B]) = new Monoid[(A, B)] {
+    def op(a1: (A, B), a2: (A, B)) = (ma.op(a1._1, a2._1), mb.op(a1._2, a2._2))
+    val zero = (ma.zero, mb.zero)
+  }
 }
 
 trait Foldable[F[_]] {
@@ -241,6 +248,10 @@ object MonoidLaws extends App {
     rStub <- strings
   } yield Part(lStub, words, rStub)
   def toilets = Gen.weighted[WC]((stubs, 0.5), (parts, 0.5))
+  def tuples[A, B](as: Gen[A], bs: Gen[B]): Gen[(A, B)] = for {
+    a <- as
+    b <- bs
+  } yield (a, b)
   
   run(monoidLaws(stringMonoid, strings))
   run(monoidLaws[List[Int]](listMonoid, ints.listOfN(positiveInts)))
@@ -253,5 +264,6 @@ object MonoidLaws extends App {
   // testing the endomonoids would be kind of annoying with the current test framework, so I'm skipping them.
   run(monoidLaws(sortedMonoid, intBoolTuples))
   run(monoidLaws(wcMonoid, toilets))
+  run(monoidLaws[(String, List[Int])](productMonoid(stringMonoid, listMonoid), tuples(strings, ints.listOfN(positiveInts))))
 }
 
