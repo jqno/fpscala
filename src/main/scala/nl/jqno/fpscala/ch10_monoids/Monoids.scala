@@ -156,6 +156,18 @@ object Monoids {
     def op(a1: A => B, a2: A => B) = (a: A) => mb.op(a1(a), a2(a))
     val zero = (_: A) => mb.zero
   }
+
+
+  // Exercise 10.18: bag
+  def mapMergeMonoid[K, V](mv: Monoid[V]) = new Monoid[Map[K ,V]] {
+    def op(a1: Map[K, V], a2: Map[K, V]) =
+      (a1.keySet ++ a2.keySet).foldLeft(zero) { (acc, k) =>
+        acc.updated(k, mv.op(a1.getOrElse(k, mv.zero), a2.getOrElse(k, mv.zero)))
+      }
+    def zero = Map.empty[K, V]
+  }
+  def bag[A](as: IndexedSeq[A]): Map[A, Int] =
+    foldMap(as, mapMergeMonoid[A, Int](intAddition))(k => Map(k -> 1))
 }
 
 trait Foldable[F[_]] {

@@ -88,6 +88,16 @@ class MonoidsTest extends FlatSpec with Matchers {
     FoldableOption.toList(None) should be (Nil)
   }
 
+  
+  // Exercise 10.18: bag
+  behavior of "bag"
+
+  it should "act like a bag" in {
+    val in = Vector("a", "rose", "is", "a", "rose")
+    val expected = Map("a" -> 2, "rose" -> 2, "is" -> 1)
+    bag(in) should be (expected)
+  }
+
 
   private val pool = java.util.concurrent.Executors.newFixedThreadPool(2)
   private def get[A](p: Par[A]): A =
