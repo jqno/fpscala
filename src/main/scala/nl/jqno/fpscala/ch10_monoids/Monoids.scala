@@ -149,6 +149,13 @@ object Monoids {
     def op(a1: (A, B), a2: (A, B)) = (ma.op(a1._1, a2._1), mb.op(a1._2, a2._2))
     val zero = (ma.zero, mb.zero)
   }
+
+
+  // Exercise 10.17: functionMonoid
+  def functionMonoid[A, B](mb: Monoid[B]) = new Monoid[A => B] {
+    def op(a1: A => B, a2: A => B) = (a: A) => mb.op(a1(a), a2(a))
+    val zero = (_: A) => mb.zero
+  }
 }
 
 trait Foldable[F[_]] {
