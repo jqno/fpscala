@@ -190,6 +190,14 @@ object FoldableTree extends Foldable[Tree] {
 }
 
 
+// Exercise 10.14: foldable Option
+object FoldableOption extends Foldable[Option] {
+  def foldRight[A, B](opt: Option[A])(z: B)(f: (A, B) => B): B = opt.foldRight(z)(f)
+  def foldLeft[A, B](opt: Option[A])(z: B)(f: (B, A) => B): B = opt.foldLeft(z)(f)
+  def foldMap[A, B](opt: Option[A])(f: A => B)(mb: Monoid[B]): B = opt.map(f).getOrElse(mb.zero)
+}
+
+
 
 object MonoidLaws extends App {
   import nl.jqno.fpscala.ch8_testing._
