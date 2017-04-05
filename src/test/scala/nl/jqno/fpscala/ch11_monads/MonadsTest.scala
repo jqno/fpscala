@@ -31,4 +31,16 @@ class MonadsTest extends FlatSpec with Matchers {
     val f = (i: Int) => if (i % 2 == 0) None else Some(i)
     optionMonad.traverse(in)(f) should be (None)
   }
+
+
+  // Exercise 11.4: replicateM
+  behavior of "replicateM"
+
+  it should "replicate a Some" in {
+    optionMonad.replicateM(3, Some(42)) should be (Some(List(42, 42, 42)))
+  }
+
+  it should "not replicate a None" in {
+    optionMonad.replicateM(3, None) should be (None)
+  }
 }

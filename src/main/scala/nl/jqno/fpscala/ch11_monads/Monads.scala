@@ -43,7 +43,11 @@ trait Monad[M[_]] extends Functor[M] {
     la.foldRight(unit(List.empty[B]))((curr, acc) => flatMap(f(curr))(h => map(acc)(t => h :: t)))
 
 
-  def replicateM[A](n: Int, ma: M[A]): M[List[A]] = ???
+  // Exercise 11.4: replicateM
+  def replicateM[A](n: Int, ma: M[A]): M[List[A]] =
+    if (n <= 0) unit(List.empty[A])
+    else map2(ma, replicateM(n - 1, ma))(_ :: _)
+
 
   def compose[A,B,C](f: A => M[B], g: B => M[C]): A => M[C] = ???
 
