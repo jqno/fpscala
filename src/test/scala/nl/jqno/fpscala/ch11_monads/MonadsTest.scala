@@ -20,5 +20,15 @@ class MonadsTest extends FlatSpec with Matchers {
 
   behavior of "traverse"
 
-  it should "???" in pending
+  it should "traverse a list into an option" in {
+    val in = List(1, 2, 3)
+    val f = (i: Int) => Some(i)
+    optionMonad.traverse(in)(f) should be (Some(List(1, 2, 3)))
+  }
+
+  it should "traverse a list into a none" in {
+    val in = List(1, 2, 3)
+    val f = (i: Int) => if (i % 2 == 0) None else Some(i)
+    optionMonad.traverse(in)(f) should be (None)
+  }
 }
