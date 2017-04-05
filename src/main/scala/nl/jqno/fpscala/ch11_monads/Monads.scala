@@ -45,8 +45,7 @@ trait Monad[M[_]] extends Functor[M] {
 
   // Exercise 11.4: replicateM
   def replicateM[A](n: Int, ma: M[A]): M[List[A]] =
-    if (n <= 0) unit(List.empty[A])
-    else map2(ma, replicateM(n - 1, ma))(_ :: _)
+    map(ma)(a => List.fill(n)(a))
 
 
   def compose[A,B,C](f: A => M[B], g: B => M[C]): A => M[C] = ???
