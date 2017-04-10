@@ -43,4 +43,20 @@ class MonadsTest extends FlatSpec with Matchers {
   it should "not replicate a None" in {
     optionMonad.replicateM(3, None) should be (None)
   }
+
+
+  // Exercise 11.6: filterM
+  behavior of "filterM"
+
+  it should "filter to Some" in {
+    val in = List(1, 2, 3, 4)
+    val f = (i: Int) => if (i % 2 == 0) Some(true) else Some(false)
+    optionMonad.filterM(in)(f) should be (Some(List(2, 4)))
+  }
+
+  it should "filter to None" in {
+    val in = List(1, 2, 3, 4)
+    val f = (i: Int) => if (i % 2 == 0) Some(true) else None
+    optionMonad.filterM(in)(f) should be (None)
+  }
 }
