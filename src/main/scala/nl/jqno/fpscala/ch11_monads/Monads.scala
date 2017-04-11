@@ -66,6 +66,41 @@ trait Monad[M[_]] extends Functor[M] {
     compose[Unit,A,B](_ => ma, f)(())
 
 
+  // Exercise 11.9: flatMap and compose are equivalent
+  /*
+   *      flatMap(flatMap(x)(f))(g) == flatMap(x)(a => flatMap(f(a))(g))
+   *
+   * === definition of compose
+   *
+   *      flatMap(compose(_ => x, f))(())(g) == flatMap(x)(a => compose(_ => f(a), g)(()))
+   *
+   * === definintion of compose
+   *
+   *      compose(_ => compose(_ => x, f)(()), g)(()) == compose(_ => x, a => compose(_ => f(a), g)(()))(())
+   *
+   * === apply ()
+   *
+   *      compose(() => compose(() => x, f), g) == compose(() => x, a => compose(() => f(a)))
+   *
+   * === substitute `() => x` with `q`
+   *
+   *      compose(() => compose(q, f), g) == compose(q, a => compose(() => f(a), g))
+   *
+   * === can we just drop the ()'s?
+   *
+   *      compose(compose(q, f), g) == compose(q, a => compose(f(a), g))
+   *
+   * === apply a
+   *
+   *      compose(compose(q, f), g) == compose(q, compose(f, g))
+   *
+   * === rename variables
+   *
+   *      compose(compose(f, g), h) == compose(f, compose(g, h))
+   *
+   */
+
+
   def join[A](mma: M[M[A]]): M[A] = ???
 
   // Implement in terms of `join`:
