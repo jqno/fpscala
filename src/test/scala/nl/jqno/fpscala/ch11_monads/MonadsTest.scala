@@ -59,4 +59,16 @@ class MonadsTest extends FlatSpec with Matchers {
     val f = (i: Int) => if (i % 2 == 0) Some(true) else None
     optionMonad.filterM(in)(f) should be (None)
   }
+
+
+  // Exercise 11.8: flatMap in terms of compose
+  behavior of "_flatMap"
+
+  it should "return None for None" in {
+    optionMonad._flatMap[Int, Int](None)(i => Some(i + 1)) should be (None)
+  }
+
+  it should "return Some for Some" in {
+    optionMonad._flatMap(Some(1))(i => Some(i + 1)) should be (Some(2))
+  }
 }
