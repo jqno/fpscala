@@ -71,4 +71,17 @@ class MonadsTest extends FlatSpec with Matchers {
   it should "return Some for Some" in {
     optionMonad._flatMap(Some(1))(i => Some(i + 1)) should be (Some(2))
   }
+
+
+  // Exercise 11.12: join
+  behavior of "join"
+
+  it should "join over None" in {
+    optionMonad.join(None) should be (None)
+    optionMonad.join(Some(None)) should be (None)
+  }
+
+  it should "join over Some" in {
+    optionMonad.join(Some(Some(42))) should be (Some(42))
+  }
 }
