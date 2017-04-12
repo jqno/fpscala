@@ -134,6 +134,36 @@ trait Monad[M[_]] extends Functor[M] {
    */
 
 
+  // Exercise 11.11: identity laws for Option
+  /*
+   * Left identity:
+   *
+   * // don't have to do None here because we don't have to nest the monads
+   *
+   *
+   *      flatMap(Some(1))(f)
+   *
+   * === definition of flatMap
+   *
+   *      f(1)
+   */
+  /*
+   * Right identity:
+   *
+   *      flatMap(None)(Some(_))
+   *
+   * === definition of flatMap
+   *
+   *      None
+   *
+   *
+   *      flatMap(Some(1))(Some(_))
+   *
+   * === definition of flatMap
+   *
+   *      Some(1)
+   */
+
   def join[A](mma: M[M[A]]): M[A] = ???
 
   // Implement in terms of `join`:
