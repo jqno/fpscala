@@ -84,4 +84,16 @@ class MonadsTest extends FlatSpec with Matchers {
   it should "join over Some" in {
     optionMonad.join(Some(Some(42))) should be (Some(42))
   }
+
+
+  // Exercise 11.13: flatMap in terms of join
+  behavior of "__flatMap"
+
+  it should "return None for None" in {
+    optionMonad.__flatMap[Int, Int](None)(i => Some(i + 1)) should be (None)
+  }
+
+  it should "return Some for Some" in {
+    optionMonad.__flatMap(Some(1))(i => Some(i + 1)) should be (Some(2))
+  }
 }
