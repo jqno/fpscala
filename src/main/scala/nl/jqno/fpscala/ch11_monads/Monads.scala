@@ -101,6 +101,39 @@ trait Monad[M[_]] extends Functor[M] {
    */
 
 
+  // Exercise 11.10: unit laws
+  /* Left identity:
+   *
+   *      compose(unit, f) == f
+   *
+   * === definition of compose
+   *    
+   *      y => flatMap(unit(y))(f) == f
+   *
+   * === apply y
+   *
+   *      flatMap(unit(y))(f) == f(y)
+   */
+  /*
+   * Right identity:
+   *
+   *      compose(f, unit) == f
+   *
+   * === definition of compose
+   *
+   *      a => flatMap(f(a))(unit) == f
+   *
+   * === apply a
+   *
+   *      flatMap(f(a))(unit) = f(a)
+   *
+   * === f(a) == x
+   *
+   *      flatMap(x)(unit) == x
+   *
+   */
+
+
   def join[A](mma: M[M[A]]): M[A] = ???
 
   // Implement in terms of `join`:
