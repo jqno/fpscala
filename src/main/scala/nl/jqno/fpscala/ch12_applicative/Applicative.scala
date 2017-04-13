@@ -9,9 +9,15 @@ import language.implicitConversions
 
 trait Applicative[F[_]] extends Functor[F] {
 
-  def map2[A,B,C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C] = ???
+  // Exercise 12.2: apply, map2
+  def map2[A,B,C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C] = {
+    val tupledF = unit(Function.tupled(f))
+    val tuple: F[(A, B)] = product(fa, fb)   // infinite recursion! woot!
+    apply(tupledF)(tuple)
+  }
 
-  def apply[A,B](fab: F[A => B])(fa: F[A]): F[B] = ???
+  def apply[A,B](fab: F[A => B])(fa: F[A]): F[B] =
+    map2(fab, fa)(_ apply _)    // that's Function.apply
 
   def unit[A](a: => A): F[A]
 
