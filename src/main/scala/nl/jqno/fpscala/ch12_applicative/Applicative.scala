@@ -15,14 +15,24 @@ trait Applicative[F[_]] extends Functor[F] {
 
   def unit[A](a: => A): F[A]
 
+
+  // Exercise 12.1: sequence, replicateM, product
+  def sequence[A](fas: List[F[A]]): F[List[A]] =
+    fas.foldRight(unit(List.empty[A]))(map2(_, _)(_ :: _))
+
+  def replicateM[A](n: Int, fa: F[A]): F[List[A]] =
+    sequence(List.fill(n)(fa))
+
+  def product[A, B](fa: F[A], fb: F[B]): F[(A, B)] =
+    map2(fa, fb)((_, _))
+
+
+
+
   def map[A,B](fa: F[A])(f: A => B): F[B] =
     apply(unit(f))(fa)
 
-  def sequence[A](fas: List[F[A]]): F[List[A]] = ???
-
   def traverse[A,B](as: List[A])(f: A => F[B]): F[List[B]] = ???
-
-  def replicateM[A](n: Int, fa: F[A]): F[List[A]] = ???
 
   def factor[A,B](fa: F[A], fb: F[B]): F[(A,B)] = ???
 
