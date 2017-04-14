@@ -75,7 +75,14 @@ trait Monad[F[_]] extends Applicative[F] {
 }
 
 object Monad {
-  def eitherMonad[E]: Monad[({type f[x] = Either[E, x]})#f] = ???
+  // Exercise 12.5: either monad
+  def eitherMonad[E] = new Monad[({type f[x] = Either[E, x]})#f] {
+    override def unit[A](a: => A): Either[E, A] =
+      Right(a)
+    override def flatMap[A, B](ma: Either[E, A])(f: A => Either[E, B]): Either[E, B] =
+      ma.right.flatMap(f)
+  }
+
 
   def stateMonad[S] = new Monad[({type f[x] = State[S, x]})#f] {
     def unit[A](a: => A): State[S, A] = State(s => (a, s))
