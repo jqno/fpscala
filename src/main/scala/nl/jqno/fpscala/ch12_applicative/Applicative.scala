@@ -30,6 +30,20 @@ trait Applicative[F[_]] extends Functor[F] {
     map2(fa, fb)((_, _))
 
 
+  // Exercise 12.3: map3, map4
+  def map3[A, B, C, D](fa: F[A], fb: F[B], fc: F[C])(f: (A, B, C) => D): F[D] = {
+    val fbcd = map(fa)(f.curried)
+    val fcd = apply(fbcd)(fb)
+    apply(fcd)(fc)
+  }
+
+  def map4[A, B, C, D, E](fa: F[A], fb: F[B], fc: F[C], fd: F[D])(f: (A, B, C, D) => E): F[E] = {
+    val fbcde = map(fa)(f.curried)
+    val fcde = apply(fbcde)(fb)
+    val fde = apply(fcde)(fc)
+    apply(fde)(fd)
+  }
+
 
 
   def map[A,B](fa: F[A])(f: A => B): F[B] =
