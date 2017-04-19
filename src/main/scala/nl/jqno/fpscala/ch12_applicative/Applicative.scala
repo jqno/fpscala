@@ -56,6 +56,15 @@ trait Applicative[F[_]] extends Functor[F] {
     }
 
 
+  // Exercise 12.8: another compose
+  def compose[G[_]](G: Applicative[G]): Applicative[({type f[x] = F[G[x]]})#f] =
+    new Applicative[({type f[x] = F[G[x]]})#f] {
+      override def unit[A](a: => A): F[G[A]] =
+        self.unit(G.unit(a))
+      override def apply[A,B](fgab: F[G[A => B]])(fga: F[G[A]]): F[G[B]] =
+        self.map2(fgab, fga)(G.map2(_, _)(_ apply _))
+    }
+
 
 
   def map[A,B](fa: F[A])(f: A => B): F[B] =
@@ -64,8 +73,6 @@ trait Applicative[F[_]] extends Functor[F] {
   def traverse[A,B](as: List[A])(f: A => F[B]): F[List[B]] = ???
 
   def factor[A,B](fa: F[A], fb: F[B]): F[(A,B)] = ???
-
-  def compose[G[_]](G: Applicative[G]): Applicative[({type f[x] = F[G[x]]})#f] = ???
 
   def sequenceMap[K,V](ofa: Map[K,F[V]]): F[Map[K,V]] = ???
 }
