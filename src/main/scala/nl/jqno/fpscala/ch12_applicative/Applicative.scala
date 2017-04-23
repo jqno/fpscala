@@ -191,6 +191,7 @@ trait Traverse[F[_]] extends Functor[F] with Foldable[F] {
 
   def reverse[A](fa: F[A]): F[A] = ???
 
+  override def foldRight[A,B](as: F[A])(z: B)(f: (A, B) => B): B = ???
   override def foldLeft[A,B](fa: F[A])(z: B)(f: (B, A) => B): B = ???
 
   def fuse[G[_],H[_],A,B](fa: F[A])(f: A => G[B], g: A => H[B])
@@ -199,12 +200,30 @@ trait Traverse[F[_]] extends Functor[F] with Foldable[F] {
   def compose[G[_]](implicit G: Traverse[G]): Traverse[({type f[x] = F[G[x]]})#f] = ???
 }
 
+
+// Exercise 12.13: Traverse instances for List, Option and Tree
 object Traverse {
-  val listTraverse = ???
+  val listTraverse: Traverse[List] = new Traverse[List] {
+    override def traverse[G[_]:Applicative,A,B](fa: List[A])(f: A => G[B]): G[List[B]] = {
+      val G = implicitly[Applicative[G]]
+      fa.foldRight(G.unit(List.empty[B]))((cur, acc) => G.map2(f(cur), acc)(_ :: _))
+    }
+  }
 
-  val optionTraverse = ???
+  val optionTraverse: Traverse[Option] = new Traverse[Option] {
+    override def traverse[G[_]:Applicative,A,B](fa: Option[A])(f: A => G[B]): G[Option[B]] = {
+      val G = implicitly[Applicative[G]]
+      fa.foldRight(G.unit(None: Option[B]))((cur, _) => G.map(f(cur))(b => Some(b)))
+    }
+  }
 
-  val treeTraverse = ???
+  val treeTraverse: Traverse[Tree] = new Traverse[Tree] {
+    override def traverse[G[_]:Applicative,A,B](fa: Tree[A])(f: A => G[B]): G[Tree[B]] = {
+      val G = implicitly[Applicative[G]]
+      // ok...I peeked
+      G.map2(f(fa.head), listTraverse.traverse(fa.tail)(a => traverse(a)(f)))(Tree(_, _))
+    }
+  }
 }
 
 // The `get` and `set` functions on `State` are used above,
