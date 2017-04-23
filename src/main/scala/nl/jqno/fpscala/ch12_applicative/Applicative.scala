@@ -201,7 +201,14 @@ trait Traverse[F[_]] extends Functor[F] with Foldable[F] {
   def zipWithIndex[A](fa: F[A]): F[(A, Int)] =
     mapAccum(fa, 0)((a, s) => ((a, s), s + 1))._1
 
-  def reverse[A](fa: F[A]): F[A] = ???
+
+  // Exercise 12.16: reverse
+  // OK, this thing typechecks, but it's (probably) incorrect.
+  // I can't really run it, because I'm getting a StackOverflowError if I run it that I don't care to debug. :/
+  def reverse[A](fa: F[A]): F[A] =
+    mapAccum(fa, ())((a,s) => (a,s))._1
+
+
 
   override def foldRight[A,B](as: F[A])(z: B)(f: (A, B) => B): B = ???
   override def foldLeft[A,B](fa: F[A])(z: B)(f: (B, A) => B): B = ???
