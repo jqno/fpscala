@@ -209,9 +209,12 @@ trait Traverse[F[_]] extends Functor[F] with Foldable[F] {
     mapAccum(fa, ())((a,s) => (a,s))._1
 
 
+  // Exercise 12.17: foldLeft in terms of mapAccum
+  override def foldLeft[A,B](fa: F[A])(z: B)(f: (B, A) => B): B =
+    mapAccum(fa, z)((a, b) => (b, f(b, a)))._2
+
 
   override def foldRight[A,B](as: F[A])(z: B)(f: (A, B) => B): B = ???
-  override def foldLeft[A,B](fa: F[A])(z: B)(f: (B, A) => B): B = ???
 
   def fuse[G[_],H[_],A,B](fa: F[A])(f: A => G[B], g: A => H[B])
                          (implicit G: Applicative[G], H: Applicative[H]): (G[F[B]], H[F[B]]) = ???
