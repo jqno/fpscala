@@ -165,7 +165,19 @@ trait Traverse[F[_]] extends Functor[F] with Foldable[F] {
   def sequence[G[_]:Applicative,A](fma: F[G[A]]): G[F[A]] =
     traverse(fma)(ma => ma)
 
-  def map[A,B](fa: F[A])(f: A => B): F[B] = ???
+
+  // Exercise 12.14: map in terms of traverse
+  case class Identity[A](value: A)
+  implicit val identityApplicative = new Applicative[Identity] {
+    override def unit[A](a: => A): Identity[A] =
+      Identity(a)
+    override def map2[A,B,C](a: Identity[A], b: Identity[B])(f: (A, B) => C): Identity[C] =
+      Identity(f(a.value, b.value))
+  }
+  def map[A,B](fa: F[A])(f: A => B): F[B] =
+    traverse(fa)(f andThen Identity.apply).value
+  
+
 
   import Applicative._
 
