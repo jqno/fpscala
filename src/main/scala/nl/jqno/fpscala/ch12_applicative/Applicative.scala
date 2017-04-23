@@ -66,6 +66,11 @@ trait Applicative[F[_]] extends Functor[F] {
     }
 
 
+  // Exercise 12.12: sequenceMap
+  def sequenceMap[K,V](ofa: Map[K,F[V]]): F[Map[K,V]] =
+    ofa.foldRight(unit(Map.empty[K, V])) { case ((k, fv), acc) => map2(fv, acc)((v, m) => m + (k -> v)) }
+
+
 
   def map[A,B](fa: F[A])(f: A => B): F[B] =
     apply(unit(f))(fa)
@@ -73,8 +78,6 @@ trait Applicative[F[_]] extends Functor[F] {
   def traverse[A,B](as: List[A])(f: A => F[B]): F[List[B]] = ???
 
   def factor[A,B](fa: F[A], fb: F[B]): F[(A,B)] = ???
-
-  def sequenceMap[K,V](ofa: Map[K,F[V]]): F[Map[K,V]] = ???
 }
 
 case class Tree[+A](head: A, tail: List[Tree[A]])
