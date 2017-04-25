@@ -384,7 +384,11 @@ object IO3 {
   def runTrampoline[A](a: Free[Function0,A]): A = a match {
     case Return(a) => a
     case Suspend(s) => s()
-    case FlatMap(s, f) => runTrampoline(f(s))
+    case FlatMap(x, f) => x match {
+      case Return(a) => runTrampoline(f(a))
+      case Suspend(x) => runTrampoline(f(x()))
+      case FlatMap(a, g) => runTrampoline(a flatMap { b => g(b) flatMap f })
+    }
   }
 
   // Exercise 3: Implement a `Free` interpreter which works for any `Monad`
