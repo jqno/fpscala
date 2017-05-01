@@ -98,7 +98,19 @@ sealed abstract class STArray[S,A](implicit manifest: Manifest[A]) {
   // Turn the array into an immutable list
   def freeze: ST[S,List[A]] = ST(value.toList)
 
-  def fill(xs: Map[Int,A]): ST[S,Unit] = ???
+
+  // Exercise 14.1: STArray.fill
+  def fill(xs: Map[Int,A]): ST[S,Unit] =
+    if (xs.isEmpty)
+      ST(())
+    else {
+      val (k, v) = xs.head
+      for {
+        _ <- write(k, v)
+        _ <- fill(xs.tail)
+      } yield ()
+    }
+
 
   def swap(i: Int, j: Int): ST[S,Unit] = for {
     x <- read(i)
