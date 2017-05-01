@@ -17,4 +17,12 @@ class LocalEffectsTest extends FlatSpec with Matchers {
     }
     ST.runST(actual) should be (List("a", "x", "b", "x"))
   }
+
+
+  // Exercise 14.2: Quicksort
+  behavior of "quicksort"
+
+  it should "sort a list" in {
+    Immutable.quicksort(List(3, 1, 4, 2)) should be (List(1, 2, 3, 4))
+  }
 }

@@ -136,9 +136,39 @@ object STArray {
 object Immutable {
   def noop[S] = ST[S,Unit](())
 
-  def partition[S](a: STArray[S,Int], l: Int, r: Int, pivot: Int): ST[S,Int] = ???
 
-  def qs[S](a: STArray[S,Int], l: Int, r: Int): ST[S, Unit] = ???
+  // Exercise 14.2: quicksort
+  def partition[S](a: STArray[S,Int], l: Int, r: Int, pivot: Int): ST[S,Int] = for {
+    pivotVal <- a.read(pivot)
+    _        <- a.swap(pivot, r)
+    j        <- STRef(l)
+    _        <- (l until r).foldLeft(noop[S])((s, i) => for {
+                  _  <- s   // I don't complete get why this is needed but it doesn't work without it
+                  x  <- a.read(i)
+                  _  <- if (x < pivotVal) {
+                          for {
+                            j1 <- j.read
+                            _  <- a.swap(i, j1)
+                            _  <- j.write(j1 + 1)
+                          } yield ()
+                        }
+                        else {
+                          noop[S]
+                        }
+                } yield ())
+    j1       <- j.read
+    _        <- a.swap(j1, r)
+  } yield j1
+
+  def qs[S](a: STArray[S,Int], l: Int, r: Int): ST[S, Unit] =
+    if (l >= r) ST(())
+    else for {
+      pi <- partition(a, l, r, l + (r - l) / 2)
+      _  <- qs(a, l, pi - 1)
+      _  <- qs(a, pi + 1, r)
+    } yield ()
+
+
 
   def quicksort(xs: List[Int]): List[Int] =
     if (xs.isEmpty) xs else ST.runST(new RunnableST[List[Int]] {
