@@ -184,3 +184,36 @@ object Immutable {
 import scala.collection.mutable.HashMap
 
 
+// Exercise 14.3: mutable HashMap
+sealed abstract class STMap[S,K,V] {
+  protected def value: HashMap[K,V]
+  def size: ST[S,Int] = ST(value.size)
+
+  // Write a value for the given key in the map
+  def write(k: K, v: V): ST[S,Unit] = new ST[S,Unit] {
+    def run(s: S) = {
+      value(k) = v
+      ((), s)
+    }
+  }
+
+  // Read the value for the given key in the map
+  def read(i: K): ST[S,V] = ST(value(i))
+
+  // Turn the map into an immutable map
+  def freeze: ST[S,Map[K,V]] = ST(value.toMap)
+}
+
+object STMap {
+  // Construct an array of the given size filled with the value v
+  def apply[S,K,V](): ST[S, STMap[S,K,V]] =
+    ST(new STMap[S,K,V] {
+      lazy val value = HashMap.empty[K,V]
+    })
+
+  def fromMap[S,K,V](m: Map[K,V]): ST[S, STMap[S,K,V]] =
+    ST(new STMap[S,K,V] {
+      lazy val value = scala.collection.mutable.HashMap(m.toList: _*)
+    })
+}
+
