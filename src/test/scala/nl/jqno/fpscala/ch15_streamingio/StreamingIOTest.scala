@@ -21,5 +21,11 @@ class StreamingIOTest extends FlatSpec with Matchers {
   it should "take the first n elements from a stream, and then stop" in {
     take(2)(someStream).toList should be (List(1, 2))
   }
+
+  behavior of "Process.drop"
+
+  it should "drop the first n elements from a stram, and then continue" in {
+    drop(2)(someStream).toList should be (List(3, 4))
+  }
 }
 
