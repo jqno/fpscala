@@ -27,5 +27,17 @@ class StreamingIOTest extends FlatSpec with Matchers {
   it should "drop the first n elements from a stram, and then continue" in {
     drop(2)(someStream).toList should be (List(3, 4))
   }
+
+  behavior of "Process.takeWhile"
+
+  it should "take elements while the predicate is true, and then stop" in {
+    takeWhile[Int](_ < 3)(someStream).toList should be (List(1, 2))
+  }
+
+  behavior of "Process.dropWhile"
+
+  it should "drop elements while the predicate is true, and then continue" in {
+    dropWhile[Int](_ < 3)(someStream).toList should be (List(3, 4))
+  }
 }
 

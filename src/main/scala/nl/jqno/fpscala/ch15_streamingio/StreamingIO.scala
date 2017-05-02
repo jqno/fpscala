@@ -308,9 +308,19 @@ object SimpleStreamTransducers {
       go(0)
     }
 
-    def takeWhile[I](f: I => Boolean): Process[I,I] = ???
+    def takeWhile[I](f: I => Boolean): Process[I,I] = await { d =>
+      if (f(d))
+        emit(d, takeWhile(f))
+      else
+        Halt()
+    }
 
-    def dropWhile[I](f: I => Boolean): Process[I,I] = ???
+    def dropWhile[I](f: I => Boolean): Process[I,I] = await { d =>
+      if (f(d))
+        dropWhile(f)
+      else
+        emit(d, dropWhile(f))
+    }
 
     /* The identity `Process`, just repeatedly echos its input. */
     def id[I]: Process[I,I] = lift(identity)
