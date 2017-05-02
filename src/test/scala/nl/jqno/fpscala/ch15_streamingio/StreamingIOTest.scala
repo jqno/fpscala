@@ -39,5 +39,13 @@ class StreamingIOTest extends FlatSpec with Matchers {
   it should "drop elements while the predicate is true, and then continue" in {
     dropWhile[Int](_ < 3)(someStream).toList should be (List(3, 4))
   }
+
+
+  // Exercise 15.2: count
+  behavior of "Process.count"
+
+  it should "keep count of the number of elements seen so far" in {
+    count(someStream).toList should be (Stream(1, 2, 3, 4))
+  }
 }
 
