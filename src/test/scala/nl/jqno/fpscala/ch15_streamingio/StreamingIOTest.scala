@@ -1,0 +1,17 @@
+package nl.jqno.fpscala.ch15_streamingio
+
+import org.scalatest.{FlatSpec, Matchers}
+import SimpleStreamTransducers.Process._
+
+class StreamingIOTest extends FlatSpec with Matchers {
+
+  val someStream = Stream(1, 2, 3, 4)
+
+
+  behavior of "Process"
+
+  it should "behave as described in the book" in { 
+    sum(someStream.map(_.toDouble)).toList should be (List(1, 3, 6, 10))
+  }
+}
+
