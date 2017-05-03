@@ -47,5 +47,13 @@ class StreamingIOTest extends FlatSpec with Matchers {
   it should "keep count of the number of elements seen so far" in {
     count(someStream).toList should be (Stream(1, 2, 3, 4))
   }
+
+
+  // Exercise 15.3: mean
+  behavior of "Process.mean"
+
+  it should "keep a running average" in {
+    mean(someStream.map(_.toDouble)).toList should be (Stream(1, 1.5, 2, 2.5))
+  }
 }
 
