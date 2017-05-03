@@ -55,5 +55,17 @@ class StreamingIOTest extends FlatSpec with Matchers {
   it should "keep a running average" in {
     mean(someStream.map(_.toDouble)).toList should be (Stream(1, 1.5, 2, 2.5))
   }
+
+
+  // Exercise 15.4: loop
+  behavior of "loop"
+
+  it should "keep a running sum" in {
+    sum2(someStream.map(_.toDouble)).toList should be (List(1, 3, 6, 10))
+  }
+
+  it should "keep a running count" in {
+    count3(someStream).toList should be (Stream(1, 2, 3, 4))
+  }
 }
 
