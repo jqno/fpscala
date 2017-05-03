@@ -67,5 +67,13 @@ class StreamingIOTest extends FlatSpec with Matchers {
   it should "keep a running count" in {
     count3(someStream).toList should be (Stream(1, 2, 3, 4))
   }
+
+
+  // Exercise 15.5: |>
+  behavior of "|>"
+
+  it should "compose two instances of Process" in {
+    (drop(2) |> sum)(someStream.map(_.toDouble)).toList should be (List(3, 7))
+  }
 }
 
