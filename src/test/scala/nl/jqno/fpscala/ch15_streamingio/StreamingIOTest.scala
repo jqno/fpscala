@@ -88,5 +88,13 @@ class StreamingIOTest extends FlatSpec with Matchers {
   // Then the next exercise has no hint either, is marked as hard, and
   // nowhere suggests that you have to make a zip function either, and now
   // I'm just kind of annoyed with both of them. 😅
+  
+
+  // Exercise 15.8: exists
+  behavior of "exists"
+
+  it should "let us know if a thing exists" in {
+    exists[Int](_ > 2)(someStream).toList should be (List(false, false, true, true))
+  }
 }
 
