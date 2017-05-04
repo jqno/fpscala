@@ -75,5 +75,18 @@ class StreamingIOTest extends FlatSpec with Matchers {
   it should "compose two instances of Process" in {
     (drop(2) |> sum)(someStream.map(_.toDouble)).toList should be (List(3, 7))
   }
+
+
+  // Exercise 15.6: zipWithIndex and 15.7: mean in terms of sum & count
+  //
+  // I'm skipping 15.6 because I couldn't figure out how to make it work
+  // (and it's weird because it's the only operation not defined on the
+  // companion object for some reason). There's no hint and the answerKey
+  // relies on zip, a thing that belongs to the next exercise like it's a
+  // normal thing to just do exercises in a random order or something.
+  //
+  // Then the next exercise has no hint either, is marked as hard, and
+  // nowhere suggests that you have to make a zip function either, and now
+  // I'm just kind of annoyed with both of them. 😅
 }
 
